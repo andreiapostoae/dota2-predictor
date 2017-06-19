@@ -8,7 +8,7 @@ import time
 OPENDOTA_BASE_URL = "https://api.opendota.com/api/matches/"
 REQUEST_TIMEOUT = 0.3
 
-class Miner(object):
+class OpendotaMiner(object):
 	""" Sends HTTP requests to opendota, parses the JSON that comes as a
 	response and saves data regarding the average MMR of the games
 
@@ -85,6 +85,7 @@ class Miner(object):
 
 def main():
 	""" Main function """
+
 	if len(sys.argv) < 4:
 		sys.exit("Usage: %s <input_file> <output_file> <number_of_games>" % sys.argv[0])
 
@@ -110,7 +111,7 @@ def main():
 	for j in range(games_number):
 		games_list.append(full_list[j][0])
 
-	miner = Miner(games_list, out_file)
+	miner = OpendotaMiner(games_list, out_file)
 	miner.run()
 
 	in_file.close()
