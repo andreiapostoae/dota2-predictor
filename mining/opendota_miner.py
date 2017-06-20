@@ -39,6 +39,8 @@ class OpendotaMiner(object):
 
 		if "error" in game_json:
 			print "Response error at game " + str(game)
+			time.sleep(REQUEST_TIMEOUT)
+			self.process_request(game)
 			return
 
 		csv_entry = str(game) + ","
