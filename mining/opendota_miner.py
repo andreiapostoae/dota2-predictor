@@ -7,6 +7,7 @@ import time
 
 OPENDOTA_BASE_URL = "https://api.opendota.com/api/matches/"
 REQUEST_TIMEOUT = 0.3
+MAX_RETRIES = 10
 
 class OpendotaMiner(object):
 	""" Sends HTTP requests to opendota, parses the JSON that comes as a
@@ -21,11 +22,12 @@ class OpendotaMiner(object):
 		self.games_list = list_of_games
 		self.output_file = output_file_handle
 
-	def process_request(self, game):
+	def process_request(self, game, retries):
 		""" Gets the data through HTTP request and writes it to file for
 		a single game
 
 		game -- match ID to be processed
+		retries -- number of retries until proceeding to the next request
 		"""
 
 		url = OPENDOTA_BASE_URL + str(game)
@@ -39,9 +41,16 @@ class OpendotaMiner(object):
 
 		if "error" in game_json:
 			print "Response error at game " + str(game)
-			time.sleep(REQUEST_TIMEOUT)
-			self.process_request(game)
+			if retries < MAX_RETRIES:
+				time.sleep(REQUEST_TIMEOUT)
+				self.process_request(game, retries + 1)
 			return
+
+		if "radiant_win" not in game_json:
+			print "JSON is corrupted, skipping " + str(game)
+			return
+		else:
+			radiant_win = game_json["radiant_win"]
 
 		csv_entry = str(game) + ","
 
@@ -68,7 +77,13 @@ class OpendotaMiner(object):
 		else:
 			mmr_avg = -1
 
-		csv_entry += str(mmr_avg) + "\n"
+		csv_entry += str(mmr_avg) + ","
+
+		if radiant_win:
+			csv_entry += "1\n"
+		else:
+			csv_entry += "0\n"
+
 		self.output_file.write(csv_entry)
 
 	def run(self):
@@ -76,7 +91,7 @@ class OpendotaMiner(object):
 		games_count = len(self.games_list)
 		start_time = time.time()
 		for i in range(games_count):
-			self.process_request(self.games_list[i])
+			self.process_request(self.games_list[i], 0)
 
 			if i % 10 == 9:
 				elapsed_time = time.time() - start_time
