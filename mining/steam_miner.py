@@ -70,7 +70,11 @@ class SteamMiner(object):
 		"""
 
 		response = urllib.urlopen(url_api)
-		games_json = json.load(response)
+
+		try:
+			games_json = json.load(response)
+		except ValueError:
+			return self.get_response(url_api)
 
 		if 'result' not in games_json:
 			return self.get_response(url_api)
@@ -98,6 +102,8 @@ class SteamMiner(object):
 				if valid(match):
 					self.out_file.write(str(match_id) + "\n")
 				self.seq_num = match['match_seq_num'] + 1
+
+			print "Processed %d games" % ((i + 1) * 100) 
 
 def main():
 	""" Main function """
