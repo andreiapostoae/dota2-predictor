@@ -1,4 +1,7 @@
-"""This module mines from opendota public API given a list of games"""
+""" This module mines from opendota public API given a list of games
+The output is in the format specified in mining_headers.csv
+"""
+
 import csv
 import json
 import sys
