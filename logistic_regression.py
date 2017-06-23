@@ -1,60 +1,86 @@
-import pandas
+""" Module responsible for training the preprocessed data using logistic regression """
 import csv
-import numpy as np
 import sys
+import numpy as np
 
-from sklearn import metrics 
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split, validation_curve
+from sklearn.model_selection import train_test_split
 from sklearn.externals import joblib
-from matplotlib import pyplot as plt
-from preprocessing.prepare_data import DataPreprocess, calculate_rating
+from preprocessing.prepare_data import DataPreprocess, DEFAULT_MMR_OFFSET, NUMBER_OF_HEROES
+from training.evaluate import evaluate_model, plot_learning_curve
 
-TEST_RATIO = 0.3
-NUMBER_OF_FEATURES = 230
+TEST_RATIO = 0.25
+NUMBER_OF_FEATURES = 2 * NUMBER_OF_HEROES + 2
+
+def split_data(matrix):
+	""" Splits the data in the preprocessed matrix into test and train data
+
+	matrix -- matrix to be split
+	"""
+
+	x_matrix = matrix[:, 0:NUMBER_OF_FEATURES]
+	y_matrix = np.ravel(matrix[:, -1])
+
+	x_train, x_test, y_train, y_test = \
+		train_test_split(x_matrix, y_matrix, test_size=TEST_RATIO, random_state=0)
+
+	return [x_train, x_test, y_train, y_test]
 
 class LogReg(object):
+	""" Class for using the logistic regression algorithm, given the preprocessed data
+
+	filtered_list -- list of games that are valid for the query
+	dictionaries -- preprocessed synergy and counter data
+	output_model (optional) -- filename for the model to be outputted to (pkl format)
+	"""
+
 	def __init__(self, filtered_list, dictionaries, output_model=None):
 		self.games_list = filtered_list
 		self.synergy_radiant = dictionaries[0]
 		self.synergy_dire = dictionaries[1]
 		self.counter = dictionaries[2]
+		self.model_name = output_model
 
 	def construct_nparray(self):
+		""" Takes the list of preprocessed games and turns it into an np.array """
 		length = len(self.games_list)
-		self.matrix = np.zeros((length, NUMBER_OF_FEATURES + 2))
+		matrix = np.zeros((length, NUMBER_OF_FEATURES + 2))
 
 		for i in range(length):
 			array = np.array(self.games_list[i])
-			self.matrix[i] = array
+			matrix[i] = array
 
-		self.matrix = np.delete(self.matrix, 0, 1)
+		matrix = np.delete(matrix, 0, 1)
+		return matrix
 
-	def split_data(self):
-		X_matrix = self.matrix[:, 0:230]
-		y_matrix = np.ravel(self.matrix[:, -1])
+	def train_model(self, data_list):
+		""" Trains the model given the data list
 
-		self.X_train, self.X_test, self.y_train, self.y_test = \
-			train_test_split(X_matrix, y_matrix, test_size=TEST_RATIO, random_state=0)
+		data_list -- X and y matrices split into train and test
+		"""
 
-	def evaluate_model(self):
-		self.model = LogisticRegression()
-		self.model.fit(self.X_train, self.y_train)
+		[x_train, _, y_train, _] = data_list
+		model = LogisticRegression()
+		model.fit(x_train, y_train)
 
-		predicted = self.model.predict(self.X_test)
-		probabilities = self.model.predict_proba(self.X_test)
+		evaluate_model(model, data_list)
+		plot_learning_curve(data_list)
 
-		print "Data set size: %d" % len(self.games_list)
-		print "Raw accuracy: %.3f" % metrics.accuracy_score(self.y_test, predicted)
-		print "ROC AUC score: %.3f" % metrics.roc_auc_score(self.y_test, probabilities[:, 1])
+		if self.model_name is not None:
+			joblib.dump(model, self.model_name + ".pkl")
+
+		return model
 
 	def run(self):
-		self.construct_nparray()
-		self.split_data()
-		self.evaluate_model()
+		""" Does the training """
+		matrix = self.construct_nparray()
+		[x_train, x_test, y_train, y_test] = split_data(matrix)
+		self.train_model([x_train, x_test, y_train, y_test])
 
 
 def main():
+	""" Main function """
+
 	if len(sys.argv) < 3:
 		sys.exit("Usage: %s input_file MMR [offset]" % sys.argv[0])
 
