@@ -13,6 +13,11 @@ NUMBER_OF_HEROES = 114
 DEFAULT_MMR_OFFSET = 500
 
 def index_heroes(heroes):
+	""" Converts a list of heroes into list of 0s and 1s 
+
+	heroes -- list of heroes to be converted
+	"""
+
 	heroes_indexed = []
 	for i in range(2 * NUMBER_OF_HEROES):
 		heroes_indexed.append(0)
@@ -199,19 +204,28 @@ class DataPreprocess(object):
 		for match in filtered_list:
 			csv_writer.writerow(match)
 
-	def heatmap(self, index=0):
+	def heatmap(self, index=0, show_color=0, on_screen=1):
 		""" Creates a file with 114x114 colored squares representing a heatmap of the
 		dataset.
 
-		index -- 0 for radiant synergy (default)
-				 1 for dire synergy
-				 2 for counter
+		index -- 0 for all (default)
+				 1 for radiant synergy
+				 2 for dire synergy
+				 3 for counter
+		show_color -- set to 1 for showing color bar (only works with on_screen = 1)
+		on_screen -- set to 1 to print the heatmap on screen, 0 for saving as PNG
 		"""
 
 		if index == 0:
+			self.heatmap(1, show_color, on_screen)
+			self.heatmap(2, show_color, on_screen)
+			self.heatmap(3, show_color, on_screen)
+			return
+		elif index == 1:
 			heatmap_data = self.synergy_radiant['winrate']
 			title = 'Radiant synergy heatmap'
-		elif index == 1:
+			
+		elif index == 2:
 			heatmap_data = self.synergy_dire['winrate']
 			title = 'Dire synergy heatmap'
 		else:
@@ -225,15 +239,19 @@ class DataPreprocess(object):
 		plt.imshow(heatmap_data)
 		axes.set_aspect('equal')
 
-		# for showing what the colors mean - does not work when exporting
-		# cax = fig.add_axes([0.12, 0.1, 0.78, 0.8])
-		# cax.get_xaxis().set_visible(False)
-		# cax.get_yaxis().set_visible(False)
-		# cax.patch.set_alpha(0)
-		# cax.set_frame_on(False)
+		if(show_color == 1):
+			color_axes = fig.add_axes([0.12, 0.1, 0.78, 0.8])
+			color_axes.get_xaxis().set_visible(False)
+			color_axes.get_yaxis().set_visible(False)
+			color_axes.patch.set_alpha(0)
+			color_axes.set_frame_on(False)
 
-		filename = "heatmap" + str(index) + ".png"
-		pylab.savefig(filename, bbox_inches='tight')
+		if on_screen == 0:
+			filename = "heatmap" + str(index) + ".png"
+			pylab.savefig(filename, bbox_inches='tight')
+		else:
+			plt.colorbar(orientation='vertical')
+			plt.show()
 
 def main():
 	""" Main method """
@@ -269,6 +287,7 @@ def main():
 		data_preprocess = DataPreprocess(full_list, out_file, mmr)
 
 	data_preprocess.run()
+	data_preprocess.heatmap()
 
 	in_file.close()
 	out_file.close()
