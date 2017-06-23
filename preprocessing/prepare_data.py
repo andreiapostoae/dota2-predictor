@@ -12,6 +12,19 @@ from matplotlib import pylab
 NUMBER_OF_HEROES = 114
 DEFAULT_MMR_OFFSET = 500
 
+def index_heroes(heroes):
+	heroes_indexed = []
+	for i in range(2 * NUMBER_OF_HEROES):
+		heroes_indexed.append(0)
+
+	for i in range(10):
+		if i < 5:
+			heroes_indexed[int(heroes[i]) - 1] = 1
+		else:
+			heroes_indexed[int(heroes[i]) + 113] = 1
+
+	return heroes_indexed
+
 def calculate_rating(heroes, synergy_radiant, synergy_dire, counter_ratio):
 	""" Given a list of heroes use the dictionaries to return the synergy and counter
 	features
@@ -169,19 +182,9 @@ class DataPreprocess(object):
 			del match[12] # delete mmr
 			del match[11] # delete number of shown mmrs
 			del match[1:11] # remove raw hero indices
+			
 
-			# convert array of heroes to array of 0, 1
-			aux_array = []
-			for i in range(2 * NUMBER_OF_HEROES):
-				aux_array.append(0)
-
-			for i in range(10):
-				if i < 5:
-					aux_array[int(hero_list[i]) - 1] = 1
-				else:
-					aux_array[int(hero_list[i]) + 113] = 1
-
-			match.extend(aux_array)
+			match.extend(index_heroes(hero_list))
 
 			# add synergy and counter features
 			results = calculate_rating(hero_list, self.synergy_radiant['winrate'], \
@@ -266,7 +269,6 @@ def main():
 		data_preprocess = DataPreprocess(full_list, out_file, mmr)
 
 	data_preprocess.run()
-	data_preprocess.heatmap(0)
 
 	in_file.close()
 	out_file.close()
