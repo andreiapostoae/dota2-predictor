@@ -54,7 +54,7 @@ def calculate_rating(heroes, synergy_radiant, synergy_dire, counter_ratio):
 				radiant += synergy_radiant[hero_radiant_1][hero_radiant_2]
 				dire += synergy_dire[hero_dire_1][hero_dire_2]
 			counter += counter_ratio[hero_radiant_1][hero_dire_2]
-	return [radiant - dire, counter]
+	return [round(radiant - dire, 4), round(counter, 4)]
 
 def initialize_dict(dictionary):
 	""" Initializes the dictionary with 3 pairs of 114x114 numpy matrices
@@ -135,7 +135,7 @@ class DataPreprocess(object):
 	offset (optional) -- how far from the target MMR should the search be done
 	"""
 
-	def __init__(self, list_of_games, output_handle, mmr, offset=DEFAULT_MMR_OFFSET):
+	def __init__(self, list_of_games, mmr, offset=DEFAULT_MMR_OFFSET, output_handle=None):
 		self.games_list = list_of_games
 		self.target_mmr = mmr
 		self.output_file = output_handle
@@ -197,12 +197,15 @@ class DataPreprocess(object):
 			match.extend(results)
 
 			# add result
-			match.append(radiant_win)
+			match.append(int(radiant_win))
 
-		csv_writer = csv.writer(self.output_file, delimiter=",")
+		if self.output_file is not None:
+			csv_writer = csv.writer(self.output_file, delimiter=",")
 
-		for match in filtered_list:
-			csv_writer.writerow(match)
+			for match in filtered_list:
+				csv_writer.writerow(match)
+		else:
+			return (filtered_list, [self.synergy_radiant, self.synergy_dire, self.counter])
 
 	def heatmap(self, index=0, show_color=0, on_screen=1):
 		""" Creates a file with 114x114 colored squares representing a heatmap of the
