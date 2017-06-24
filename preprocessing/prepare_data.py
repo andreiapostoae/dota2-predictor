@@ -5,6 +5,7 @@ preprocessing/ml_header.csv
 
 import csv
 import sys
+import json
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import pylab
@@ -12,8 +13,24 @@ from matplotlib import pylab
 NUMBER_OF_HEROES = 114
 DEFAULT_MMR_OFFSET = 500
 
+def get_hero_names(path=''):
+	""" Returns a map of (index_hero, hero_name)
+
+	path -- relative path to heroes.json
+	"""
+
+	with open(path + 'heroes.json') as data_file:
+		data = json.load(data_file)
+
+	result = data["heroes"]
+	hero_map = {}
+	for hero in result:
+		hero_map[hero["id"]] = hero["localized_name"]
+
+	return hero_map
+
 def index_heroes(heroes):
-	""" Converts a list of heroes into list of 0s and 1s 
+	""" Converts a list of heroes into list of 0s and 1s
 
 	heroes -- list of heroes to be converted
 	"""
@@ -56,30 +73,46 @@ def calculate_rating(heroes, synergy_radiant, synergy_dire, counter_ratio):
 			counter += counter_ratio[hero_radiant_1][hero_dire_2]
 	return [round(radiant - dire, 4), round(counter, 4)]
 
-def initialize_dict(dictionary):
+def initialize_dict(dictionary, dims=2):
 	""" Initializes the dictionary with 3 pairs of 114x114 numpy matrices
 
 	dictionary -- dictionary to be initialized
+	dims -- number of dimensions of the numpy array
 	"""
 
-	dictionary['apps'] = np.zeros((NUMBER_OF_HEROES, NUMBER_OF_HEROES))
-	dictionary['wins'] = np.zeros((NUMBER_OF_HEROES, NUMBER_OF_HEROES))
-	dictionary['winrate'] = np.zeros((NUMBER_OF_HEROES, NUMBER_OF_HEROES))
+	if dims == 2:
+		dictionary['apps'] = np.zeros((NUMBER_OF_HEROES, NUMBER_OF_HEROES))
+		dictionary['wins'] = np.zeros((NUMBER_OF_HEROES, NUMBER_OF_HEROES))
+		dictionary['winrate'] = np.zeros((NUMBER_OF_HEROES, NUMBER_OF_HEROES))
+	else:
+		dictionary['apps'] = np.zeros(NUMBER_OF_HEROES)
+		dictionary['wins'] = np.zeros(NUMBER_OF_HEROES)
+		dictionary['winrate'] = np.zeros(NUMBER_OF_HEROES)
 
-def update_dicts(heroes, radiant_win, synergy_radiant, synergy_dire, counter):
+def update_dicts(heroes, radiant_win, dicts):
 	""" Given a list of heroes, update the dictionaries when specific heroes are present
 
 	heroes -- list of hero_ids
-	synergy_radiant -- dictionary of radiant synergy winrates
-	synergy_dire -- dictionary of dire synergy winrates
-	counter_ratio -- dictionary of radiant heroes that counter dire heroes
+	dicts -- list of dictionaries:
+		synergy_radiant -- dictionary of radiant synergy winrates
+		synergy_dire -- dictionary of dire synergy winrates
+		counter_ratio -- dictionary of radiant heroes that counter dire heroes
+		winrate_radiant -- dictionary of radiant winrate
+		winrate_dire -- dictionary of dire winrate
 	"""
 
+	synergy_radiant = dicts[0]
+	synergy_dire = dicts[1]
+	counter = dicts[2]
+	radiant_winrate = dicts[3]
+	dire_winrate = dicts[4]
+
 	for j in range(5):
+		hero_radiant_1 = int(heroes[j]) - 1
+		hero_dire_1 = int(heroes[j + 5]) - 1
+
 		for k in range(5):
-			hero_radiant_1 = int(heroes[j]) - 1
 			hero_radiant_2 = int(heroes[k]) - 1
-			hero_dire_1 = int(heroes[j + 5]) - 1
 			hero_dire_2 = int(heroes[k + 5]) - 1
 
 			if j != k:
@@ -95,34 +128,48 @@ def update_dicts(heroes, radiant_win, synergy_radiant, synergy_dire, counter):
 			if radiant_win == 1:
 				counter['wins'][hero_radiant_1][hero_dire_2] += 1
 
-def calculate_winrates(synergy_radiant, synergy_dire, counter):
+		radiant_winrate['apps'][hero_radiant_1] += 1
+		dire_winrate['apps'][hero_dire_1] += 1
+		if radiant_win:
+			radiant_winrate['wins'][hero_radiant_1] += 1
+		else:
+			dire_winrate['wins'][hero_dire_1] += 1
+
+
+def calculate_synergy_winrates(dicts):
 	""" Using the number of wins and number of total games for each pair of heroes,
 	calculate their winrate
 
-	synergy_radiant -- dictionary of radiant synergy winrates
-	synergy_dire -- dictionary of dire synergy winrates
-	counter -- dictionary of radiant heroes that counter dire heroes
+	dicts -- list of dictionaries:
+		synergy_radiant -- dictionary of radiant synergy winrates
+		synergy_dire -- dictionary of dire synergy winrates
+		counter_ratio -- dictionary of radiant heroes that counter dire heroes
+		winrate_radiant -- dictionary of radiant winrate
+		winrate_dire -- dictionary of dire winrate
 	"""
+
+	radiant_winrate = dicts[3]
+	dire_winrate = dicts[4]
 
 	for i in range(NUMBER_OF_HEROES):
 		for j in range(NUMBER_OF_HEROES):
 			if i != j:
-				if synergy_radiant['apps'][i][j] == 0.0:
-					synergy_radiant['winrate'][i][j] = 0
-				else:
-					synergy_radiant['winrate'][i][j] = \
-						synergy_radiant['wins'][i][j] / synergy_radiant['apps'][i][j]
+				for k in range(3):
+					if dicts[k]['apps'][i][j] == 0.0:
+						dicts[k]['winrate'][i][j] = 0
+					else:
+						dicts[k]['winrate'][i][j] = \
+							dicts[k]['wins'][i][j] / dicts[k]['apps'][i][j]
 
-				if synergy_dire['apps'][i][j] == 0.0:
-					synergy_dire['winrate'][i][j] = 0
-				else:
-					synergy_dire['winrate'][i][j] =  \
-						synergy_dire['wins'][i][j] / synergy_dire['apps'][i][j]
+		if radiant_winrate['apps'][i] == 0.0:
+			radiant_winrate['winrate'][i] = 0
+		else:
+			radiant_winrate['winrate'][i] = radiant_winrate['wins'][i] / radiant_winrate['apps'][i]
 
-				if counter['apps'][i][j] == 0.0:
-					counter['winrate'][i][j] = 0
-				else:
-					counter['winrate'][i][j] = counter['wins'][i][j] / counter['apps'][i][j]
+		if dire_winrate['apps'][i] == 0.0:
+			dire_winrate['winrate'][i] = 0
+		else:
+			dire_winrate['winrate'][i] = dire_winrate['wins'][i] / dire_winrate['apps'][i]
 
 
 class DataPreprocess(object):
@@ -143,14 +190,17 @@ class DataPreprocess(object):
 		self.initialize_dicts()
 
 	def initialize_dicts(self):
-		""" Initializes the dictionaries """
-		self.synergy_radiant = {}
-		self.synergy_dire = {}
-		self.counter = {}
+		""" Initializes the dictionaries:
+		radiant_synergy, dire_synergy, counter, radiant_winrate, dire_winrate
+		"""
 
-		initialize_dict(self.synergy_radiant)
-		initialize_dict(self.synergy_dire)
-		initialize_dict(self.counter)
+		self.dicts = [{}, {}, {}, {}, {}]
+
+		initialize_dict(self.dicts[0], 2)
+		initialize_dict(self.dicts[1], 2)
+		initialize_dict(self.dicts[2], 2)
+		initialize_dict(self.dicts[3], 1)
+		initialize_dict(self.dicts[4], 1)
 
 	def is_mmr_valid(self, mmr):
 		""" Checks if a MMR is in the desired range """
@@ -173,11 +223,9 @@ class DataPreprocess(object):
 			if self.is_mmr_valid(current_mmr):
 				filtered_list.append(self.games_list[i])
 				heroes = current_game[2:12]
-				update_dicts(heroes, radiant_win, self.synergy_radiant, \
-					self.synergy_dire, self.counter)
+				update_dicts(heroes, radiant_win, self.dicts)
 
-
-		calculate_winrates(self.synergy_radiant, self.synergy_dire, self.counter)
+		calculate_synergy_winrates(self.dicts)
 
 		for match in filtered_list:
 			hero_list = match[2:12]
@@ -187,13 +235,12 @@ class DataPreprocess(object):
 			del match[12] # delete mmr
 			del match[11] # delete number of shown mmrs
 			del match[1:11] # remove raw hero indices
-			
 
 			match.extend(index_heroes(hero_list))
 
 			# add synergy and counter features
-			results = calculate_rating(hero_list, self.synergy_radiant['winrate'], \
-						self.synergy_dire['winrate'], self.counter['winrate'])
+			results = calculate_rating(hero_list, self.dicts[0]['winrate'], \
+						self.dicts[1]['winrate'], self.dicts[2]['winrate'])
 			match.extend(results)
 
 			# add result
@@ -205,7 +252,7 @@ class DataPreprocess(object):
 			for match in filtered_list:
 				csv_writer.writerow(match)
 		else:
-			return (filtered_list, [self.synergy_radiant, self.synergy_dire, self.counter])
+			return (filtered_list, [self.dicts[0], self.dicts[1], self.dicts[2]])
 
 	def heatmap(self, index=0, show_color=0, on_screen=1):
 		""" Creates a file with 114x114 colored squares representing a heatmap of the
@@ -225,14 +272,14 @@ class DataPreprocess(object):
 			self.heatmap(3, show_color, on_screen)
 			return
 		elif index == 1:
-			heatmap_data = self.synergy_radiant['winrate']
+			heatmap_data = self.dicts[0]['winrate']
 			title = 'Radiant synergy heatmap'
-			
+
 		elif index == 2:
-			heatmap_data = self.synergy_dire['winrate']
+			heatmap_data = self.dicts[1]['winrate']
 			title = 'Dire synergy heatmap'
 		else:
-			heatmap_data = self.counter['winrate']
+			heatmap_data = self.dicts[2]['winrate']
 			title = 'Counter heatmap'
 
 		fig = plt.figure(figsize=(15, 15))
@@ -242,7 +289,7 @@ class DataPreprocess(object):
 		plt.imshow(heatmap_data)
 		axes.set_aspect('equal')
 
-		if(show_color == 1):
+		if show_color == 1:
 			color_axes = fig.add_axes([0.12, 0.1, 0.78, 0.8])
 			color_axes.get_xaxis().set_visible(False)
 			color_axes.get_yaxis().set_visible(False)
@@ -255,6 +302,54 @@ class DataPreprocess(object):
 		else:
 			plt.colorbar(orientation='vertical')
 			plt.show()
+
+	def hero_winrates(self, radiant=1):
+		""" Calculates the hero winrates over the filtered games
+
+		radiant (optional) -- 1 for radiant games (default)
+							  0 for dire games
+		"""
+
+		hero_map = get_hero_names()
+		heroes_dict = {}
+		hero_list = []
+
+		for i in range(114):
+			if i != 23:
+				hero_list.append(i + 1)
+
+				if radiant == 1:
+					heroes_dict[self.dicts[3]['winrate'][i]] = hero_map[i + 1]
+				else:
+					heroes_dict[self.dicts[4]['winrate'][i]] = hero_map[i + 1]
+
+		keys = heroes_dict.keys()
+		keys.sort(reverse=True)
+
+		fig = plt.figure(figsize=(20, 20))
+		axes = fig.add_subplot(111)
+
+		axes.set_ylim([0, 115])
+		axes.set_xlim([0, 1])
+		axes.invert_yaxis()
+
+		sorted_values = []
+		for key in keys:
+			sorted_values.append(heroes_dict.get(key))
+
+		plt.yticks(hero_list, sorted_values, size=5)
+
+		rects = axes.barh(hero_list, keys, height=0.8)
+
+		for rect in rects:
+			width = rect.get_width()
+			axes.text(width * 1.03, rect.get_y() + rect.get_height()/2. + 0.75, \
+				'%.2f%%' % (width * 100), ha='center', va='bottom', size=6)
+
+		plt.title('Radiant winrate at %d - %d MMR' % (self.target_mmr - self.offset_mmr, \
+			self.target_mmr + self.offset_mmr), size=20)
+		plt.show()
+
 
 def main():
 	""" Main method """
@@ -284,13 +379,13 @@ def main():
 
 	try:
 		offset = int(sys.argv[4])
-		data_preprocess = DataPreprocess(full_list, out_file, mmr, offset)
-	except ValueError:
+		data_preprocess = DataPreprocess(full_list, mmr, offset, out_file)
+	except IndexError:
 		print "The offset is invalid. Using the default offset (%d)" % DEFAULT_MMR_OFFSET
-		data_preprocess = DataPreprocess(full_list, out_file, mmr)
+		data_preprocess = DataPreprocess(full_list, mmr, out_file)
 
 	data_preprocess.run()
-	data_preprocess.heatmap()
+	#data_preprocess.hero_winrates()
 
 	in_file.close()
 	out_file.close()

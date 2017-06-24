@@ -53,10 +53,11 @@ class LogReg(object):
 		matrix = np.delete(matrix, 0, 1)
 		return matrix
 
-	def train_model(self, data_list):
+	def train_model(self, data_list, learning_curve=0):
 		""" Trains the model given the data list
 
 		data_list -- X and y matrices split into train and test
+		learning_curve (optional) -- set to 1 for plotting the learning curve
 		"""
 
 		[x_train, _, y_train, _] = data_list
@@ -64,7 +65,9 @@ class LogReg(object):
 		model.fit(x_train, y_train)
 
 		evaluate_model(model, data_list)
-		plot_learning_curve(data_list)
+
+		if learning_curve == 1:
+			plot_learning_curve(data_list)
 
 		if self.model_name is not None:
 			joblib.dump(model, self.model_name + ".pkl")
@@ -75,7 +78,7 @@ class LogReg(object):
 		""" Does the training """
 		matrix = self.construct_nparray()
 		[x_train, x_test, y_train, y_test] = split_data(matrix)
-		self.train_model([x_train, x_test, y_train, y_test])
+		return self.train_model([x_train, x_test, y_train, y_test])
 
 
 def main():

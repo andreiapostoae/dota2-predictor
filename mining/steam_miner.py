@@ -103,7 +103,7 @@ class SteamMiner(object):
 					self.out_file.write(str(match_id) + "\n")
 				self.seq_num = match['match_seq_num'] + 1
 
-			print "Processed %d games" % ((i + 1) * 100) 
+			print "Processed %d games" % ((i + 1) * 100)
 
 def main():
 	""" Main function """
