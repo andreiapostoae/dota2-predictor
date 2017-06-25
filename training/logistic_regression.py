@@ -53,7 +53,7 @@ class LogReg(object):
 		matrix = np.delete(matrix, 0, 1)
 		return matrix
 
-	def train_model(self, data_list, evaluate_model=0, learning_curve=0):
+	def train_model(self, data_list, evaluate=0, learning_curve=0):
 		""" Trains the model given the data list
 
 		data_list -- X and y matrices split into train and test
@@ -65,7 +65,7 @@ class LogReg(object):
 		model = LogisticRegression()
 		model.fit(x_train, y_train)
 
-		if evaluate_model == 1:
+		if evaluate == 1:
 			evaluate_model(model, data_list)
 
 		if learning_curve == 1:
