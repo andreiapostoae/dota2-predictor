@@ -71,6 +71,7 @@ def calculate_rating(heroes, synergy_radiant, synergy_dire, counter_ratio):
 				radiant += synergy_radiant[hero_radiant_1][hero_radiant_2]
 				dire += synergy_dire[hero_dire_1][hero_dire_2]
 			counter += counter_ratio[hero_radiant_1][hero_dire_2]
+
 	return [round(radiant - dire, 4), round(counter, 4)]
 
 def initialize_dict(dictionary, dims=2):

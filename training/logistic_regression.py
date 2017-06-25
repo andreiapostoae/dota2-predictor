@@ -53,10 +53,11 @@ class LogReg(object):
 		matrix = np.delete(matrix, 0, 1)
 		return matrix
 
-	def train_model(self, data_list, learning_curve=0):
+	def train_model(self, data_list, evaluate_model=0, learning_curve=0):
 		""" Trains the model given the data list
 
 		data_list -- X and y matrices split into train and test
+		evaluate_model -- print model metrics
 		learning_curve (optional) -- set to 1 for plotting the learning curve
 		"""
 
@@ -64,7 +65,8 @@ class LogReg(object):
 		model = LogisticRegression()
 		model.fit(x_train, y_train)
 
-		evaluate_model(model, data_list)
+		if evaluate_model == 1:
+			evaluate_model(model, data_list)
 
 		if learning_curve == 1:
 			plot_learning_curve(data_list)
@@ -72,14 +74,14 @@ class LogReg(object):
 		if self.model_name is not None:
 			joblib.dump(model, self.model_name + ".pkl")
 
-		return model
+		return [model, data_list]
 
-	def run(self):
+	def run(self, learning_curve=0):
 		""" Does the training """
 		matrix = self.construct_nparray()
 		[x_train, x_test, y_train, y_test] = split_data(matrix)
-		return self.train_model([x_train, x_test, y_train, y_test])
-
+		results = self.train_model([x_train, x_test, y_train, y_test], learning_curve)
+		return results
 
 def main():
 	""" Main function """

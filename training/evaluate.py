@@ -16,10 +16,18 @@ def evaluate_model(model, data_list):
 	predicted = model.predict(x_test)
 	probabilities = model.predict_proba(x_test)
 
-	print "Data set size: %d" % (len(y_train) + len(y_test))
-	print "Raw accuracy: %.3f" % metrics.accuracy_score(y_test, predicted)
-	print "ROC AUC score: %.3f" % metrics.roc_auc_score(y_test, probabilities[:, 1])
-	print "F1 score: %.3f" % metrics.f1_score(y_test, predicted)
+	dataset_size = (len(y_train) + len(y_test))
+	raw_accuracy = metrics.accuracy_score(y_test, predicted)
+	roc_auc_score = metrics.roc_auc_score(y_test, probabilities[:, 1])
+	f1_score = metrics.f1_score(y_test, predicted)
+
+	print "Data set size: %d" % dataset_size
+	print "Raw accuracy: %.3f" % raw_accuracy
+	print "ROC AUC score: %.3f" % roc_auc_score
+	print "F1 score: %.3f" % f1_score
+
+	return [dataset_size, raw_accuracy, roc_auc_score, f1_score]
+
 
 def plot_learning_curve(data_list, subsets=20):
 	""" Plots the learning curve of a trained model; plots both in terms of raw accuracy
