@@ -5,9 +5,12 @@ from training.logistic_regression import LogReg
 from training.evaluate import evaluate_model
 
 FOLDER = "pretrained"
+MIN_MMR = 2000
+MAX_MMR = 4200
+
 mmrs = []
-for i in range(23):
-	mmrs.append(2000 + i * 100)
+for i in range((MAX_MMR - MIN_MMR) / 100):
+	mmrs.append(MIN_MMR + i * 100)
 
 offset = int(sys.argv[2])
 
