@@ -1,6 +1,7 @@
 """ Module responsible for training the preprocessed data using logistic regression """
 import csv
 import sys
+import pickle
 import numpy as np
 
 from sklearn.linear_model import LogisticRegression
@@ -11,6 +12,17 @@ from training.evaluate import evaluate_model, plot_learning_curve
 
 TEST_RATIO = 0.25
 NUMBER_OF_FEATURES = 2 * NUMBER_OF_HEROES + 2
+
+def save_dictionaries(dicts, name):
+	""" Saves the list of dictionaries to a file
+
+	dicts -- list of dictionaries
+	name -- file path
+	"""
+
+	with open(name, 'wb') as file_handle:
+		pickle.dump(dicts, file_handle, pickle.HIGHEST_PROTOCOL)
+
 
 def split_data(matrix):
 	""" Splits the data in the preprocessed matrix into test and train data
@@ -73,6 +85,9 @@ class LogReg(object):
 
 		if self.model_name is not None:
 			joblib.dump(model, self.model_name + ".pkl")
+			dicts = [self.synergy_radiant['winrate'], self.synergy_dire['winrate'], \
+				self.counter['winrate']]
+			save_dictionaries(dicts, self.model_name + "_dicts.pkl")
 
 		return [model, data_list]
 
