@@ -7,11 +7,13 @@ import csv
 import sys
 import json
 import numpy as np
+from math import ceil
 from matplotlib import pyplot as plt
 from matplotlib import pylab
 
 NUMBER_OF_HEROES = 114
 DEFAULT_MMR_OFFSET = 500
+TEST_RATIO = 0.25
 
 def get_hero_names(path=''):
 	""" Returns a map of (index_hero, hero_name)
@@ -222,9 +224,15 @@ class DataPreprocess(object):
 			radiant_win = int(current_game[1])
 
 			if self.is_mmr_valid(current_mmr):
-				filtered_list.append(self.games_list[i])
-				heroes = current_game[2:12]
-				update_dicts(heroes, radiant_win, self.dicts)
+				filtered_list.append(current_game)
+
+		new_length = int(len(filtered_list) * 0.75 // 1) + 1
+
+		for k in range(new_length):
+			current_game = filtered_list[k]
+			radiant_win = int(current_game[1])
+			heroes = current_game[2:12]
+			update_dicts(heroes, radiant_win, self.dicts)
 
 		calculate_synergy_winrates(self.dicts)
 

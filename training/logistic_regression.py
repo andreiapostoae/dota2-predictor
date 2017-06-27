@@ -7,10 +7,9 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.externals import joblib
-from preprocessing.prepare_data import DataPreprocess, DEFAULT_MMR_OFFSET, NUMBER_OF_HEROES
+from preprocessing.prepare_data import DataPreprocess, TEST_RATIO, DEFAULT_MMR_OFFSET, NUMBER_OF_HEROES
 from training.evaluate import evaluate_model, plot_learning_curve
 
-TEST_RATIO = 0.25
 NUMBER_OF_FEATURES = 2 * NUMBER_OF_HEROES + 2
 
 def save_dictionaries(dicts, name):
@@ -80,7 +79,7 @@ class LogReg(object):
 		if evaluate == 1:
 			evaluate_model(model, data_list)
 
-		if learning_curve == 1:
+		#if learning_curve == 1:
 			plot_learning_curve(data_list)
 
 		if self.model_name is not None:

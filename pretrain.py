@@ -6,7 +6,7 @@ from training.logistic_regression import LogReg
 from training.evaluate import evaluate_model
 
 FOLDER = "pretrained"
-MIN_MMR = 2000
+MIN_MMR = 4000	
 MAX_MMR = 4200
 
 def process_row(row):
