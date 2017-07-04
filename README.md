@@ -5,7 +5,7 @@ Work is currently in progress, I will update this README when the project reache
 
 TODO:
 - hero winrates + plot fix
-- update README + requirements
+- update README
 - coding style
 - k-NN
 - notebook
