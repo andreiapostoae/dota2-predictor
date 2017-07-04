@@ -4,8 +4,8 @@ Tool that predicts the outcome of a Dota 2 game using Machine Leaning
 Work is currently in progress, I will update this README when the project reaches a usable form.
 
 TODO:
-- cross validation and better learning curve plotting
-- update README
+- hero winrates + plot fix
+- update README + requirements
 - coding style
 - k-NN
 - notebook
