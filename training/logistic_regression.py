@@ -10,9 +10,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.externals import joblib
 from sklearn import preprocessing
 from preprocessing.prepare_data import DataPreprocess, TEST_RATIO, DEFAULT_MMR_OFFSET, NUMBER_OF_HEROES
-from training.evaluate import evaluate_model, plot_learning_curve
+from training.evaluate import evaluate_model, plot_learning_curve, heatmap
 
-NUMBER_OF_FEATURES = 2 * NUMBER_OF_HEROES + 2
+NUMBER_OF_FEATURES = 2 * NUMBER_OF_HEROES
 
 def get_hero_names(path=''):
 	""" Returns a map of (index_hero, hero_name)
@@ -200,11 +200,13 @@ class LogReg(object):
 		""" Initializes the dictionaries:
 		radiant_synergy, dire_synergy, counter, radiant_winrate, dire_winrate
 		"""
-		self.dicts = [{}, {}, {}]
+		self.dicts = [{}, {}, {}, {}, {}]
 
 		initialize_dict(self.dicts[0], 2)
 		initialize_dict(self.dicts[1], 2)
 		initialize_dict(self.dicts[2], 2)
+		initialize_dict(self.dicts[3], 1)
+		initialize_dict(self.dicts[4], 1)
 
 	def construct_nparray(self):
 		""" Takes the list of preprocessed games and turns it into an np.array """
@@ -229,8 +231,8 @@ class LogReg(object):
 		print train_len
 		print test_len
 
-		x_train_new = np.zeros((x_train.shape[0], 230))
-		x_test_new = np.zeros((x_test.shape[0], 230))
+		x_train_new = np.zeros((x_train.shape[0], NUMBER_OF_FEATURES))
+		x_test_new = np.zeros((x_test.shape[0], NUMBER_OF_FEATURES))
 		
 		for i in range(train_len):
 			hero_list = x_train[i]
@@ -240,24 +242,22 @@ class LogReg(object):
 
 		calculate_synergy_winrates(self.dicts)
 
-		synergies = []
-		counter = []
 
 		for i in range(train_len):
 			hero_list = x_train[i]
 			results = calculate_rating(hero_list, self.dicts[0]['winrate'], self.dicts[1]['winrate'], self.dicts[2]['winrate'])
-			x_train_new[i, :228] = index_heroes(hero_list)
+			x_train_new[i, :NUMBER_OF_FEATURES] = index_heroes(hero_list)
 
 
 		for i in range(test_len):
 			hero_list = x_test[i]
 			results = calculate_rating(hero_list, self.dicts[0]['winrate'], self.dicts[1]['winrate'], self.dicts[2]['winrate'])
-			x_test_new[i, :228] = index_heroes(hero_list)
+			x_test_new[i, :NUMBER_OF_FEATURES] = index_heroes(hero_list)
 
 		return [x_train_new, x_test_new, y_train, y_test]
 
 
-	def train_model(self, data_list, evaluate=0, learning_curve=0):
+	def train_model(self, data_list, evaluate=0, learning_curve=0, heat_map=0):
 		""" Trains the model given the data list
 
 		data_list -- X and y matrices split into train and test
@@ -275,6 +275,9 @@ class LogReg(object):
 		if learning_curve == 1:
 			plot_learning_curve(data_list)
 
+		if heat_map == 1:
+			heatmap(self.dicts, index=0, show_color=0, on_screen=1)
+
 		if self.model_name is not None:
 			joblib.dump(model, self.model_name + ".pkl")
 			dicts = [self.dicts[0]['winrate'], self.dicts[1]['winrate'], \
@@ -283,13 +286,13 @@ class LogReg(object):
 
 		return [model, data_list]
 
-	def run(self, learning_curve=0):
+	def run(self, learning_curve=0, heatmap=0, evaluate=0):
 		""" Does the training """
 		matrix = self.construct_nparray()
 		[x_train, x_test, y_train, y_test] = split_data(matrix)
 
 		aux_list = self.add_extra_features([x_train, x_test, y_train, y_test])
-		results = self.train_model(aux_list, learning_curve)
+		results = self.train_model(aux_list, learning_curve=learning_curve, heat_map=heatmap, evaluate=evaluate)
 		return results
 
 def main():
@@ -325,8 +328,8 @@ def main():
 	filtered_list = data_preprocess.run()
 
 	print "Finished data preprocessing\n"
-	logreg = LogReg(filtered_list, dictionaries)
-	logreg.run()
+	logreg = LogReg(filtered_list)
+	logreg.run(heatmap=1)
 
 if __name__ == "__main__":
 	main()

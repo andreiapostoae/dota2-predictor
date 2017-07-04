@@ -79,3 +79,101 @@ def plot_data(subset_sizes, data_list):
 	plt.ylabel('Accuracy')
 	plt.title('Model response to dataset size')
 	plt.show()
+
+
+def heatmap(dicts, index=0, show_color=0, on_screen=1):
+	""" Creates a file with 114x114 colored squares representing a heatmap of the
+	dataset.
+
+	index -- 0 for all (default)
+			 1 for radiant synergy
+			 2 for dire synergy
+			 3 for counter
+	show_color -- set to 1 for showing color bar (only works with on_screen = 1)
+	on_screen -- set to 1 to print the heatmap on screen, 0 for saving as PNG
+	"""
+
+	if index == 0:
+		heatmap(dicts, 1, show_color, on_screen)
+		heatmap(dicts, 2, show_color, on_screen)
+		heatmap(dicts, 3, show_color, on_screen)
+		return
+	elif index == 1:
+		heatmap_data = dicts[0]['winrate']
+		title = 'Radiant synergy heatmap'
+
+	elif index == 2:
+		heatmap_data = dicts[1]['winrate']
+		title = 'Dire synergy heatmap'
+	else:
+		heatmap_data = dicts[2]['winrate']
+		title = 'Counter heatmap'
+
+	fig = plt.figure(figsize=(15, 15))
+
+	axes = fig.add_subplot(111)
+	axes.set_title(title)
+	plt.imshow(heatmap_data)
+	axes.set_aspect('equal')
+
+	if show_color == 1:
+		color_axes = fig.add_axes([0.12, 0.1, 0.78, 0.8])
+		color_axes.get_xaxis().set_visible(False)
+		color_axes.get_yaxis().set_visible(False)
+		color_axes.patch.set_alpha(0)
+		color_axes.set_frame_on(False)
+
+	if on_screen == 0:
+		filename = "heatmap" + str(index) + ".png"
+		pylab.savefig(filename, bbox_inches='tight')
+	else:
+		plt.colorbar(orientation='vertical')
+		plt.show()
+
+def hero_winrates(self, radiant=1):
+	""" Calculates the hero winrates over the filtered games
+
+	radiant (optional) -- 1 for radiant games (default)
+						  0 for dire games
+	"""
+
+	hero_map = get_hero_names()
+	heroes_dict = {}
+	hero_list = []
+
+	for i in range(114):
+		if i != 23:
+			hero_list.append(i + 1)
+
+			if radiant == 1:
+				heroes_dict[self.dicts[3]['winrate'][i]] = hero_map[i + 1]
+			else:
+				heroes_dict[self.dicts[4]['winrate'][i]] = hero_map[i + 1]
+
+	keys = heroes_dict.keys()
+	keys.sort(reverse=True)
+
+	fig = plt.figure(figsize=(20, 20))
+	axes = fig.add_subplot(111)
+
+	axes.set_ylim([0, 115])
+	axes.set_xlim([0, 1])
+	axes.invert_yaxis()
+
+	sorted_values = []
+	for key in keys:
+		sorted_values.append(heroes_dict.get(key))
+
+	plt.yticks(hero_list, sorted_values, size=5)
+
+	rects = axes.barh(hero_list, keys, height=0.8)
+
+	for rect in rects:
+		width = rect.get_width()
+		axes.text(width * 1.03, rect.get_y() + rect.get_height()/2. + 0.75, \
+			'%.2f%%' % (width * 100), ha='center', va='bottom', size=6)
+
+	plt.title('Radiant winrate at %d - %d MMR' % (self.target_mmr - self.offset_mmr, \
+		self.target_mmr + self.offset_mmr), size=20)
+	plt.show()
+
