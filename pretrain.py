@@ -6,8 +6,8 @@ from training.logistic_regression import LogReg
 from training.evaluate import evaluate_model
 
 FOLDER = "pretrained"
-MIN_MMR = 4000	
-MAX_MMR = 4200
+MIN_MMR = 2000
+MAX_MMR = 4000
 
 def process_row(row):
 	""" Rounds accuracy, AUC, F1-score to 3 decimals
@@ -15,9 +15,9 @@ def process_row(row):
 	row -- list of elements in a csv row
 	"""
 
-	for element in row:
-		if element < 1:
-			element = round(element, 3)
+	for i in range(len(row)):
+		if row[i] < 1:
+			row[i] = round(row[i], 3)
 
 def filter_and_train(mmr, offset):
 	""" Filters games within (mmr - offset, mmr + offset), trains the model
@@ -38,16 +38,16 @@ def filter_and_train(mmr, offset):
 	print "%d - %d range" % (mmr - offset, mmr + offset)
 
 	data_preprocess = DataPreprocess(full_list, mmr, offset=offset)
-	(filtered_list, dictionaries) = data_preprocess.run()
+	filtered_list = data_preprocess.run()
 
 	model_name = FOLDER + "/" + str(mmr)
-	logreg = LogReg(filtered_list, dictionaries, output_model=model_name)
+	logreg = LogReg(filtered_list, output_model=model_name)
 	[model, data_list] = logreg.run()
 
 	results = evaluate_model(model, data_list)
 	process_row(results)
 
-	results.insert(0, mmr)
+	results.insert(0, "%d - %d" % (mmr - offset, mmr + offset))
 	print ""
 	in_file.close()
 
