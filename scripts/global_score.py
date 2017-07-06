@@ -7,7 +7,7 @@ from pylint.lint import Run
 
 def main():
 	""" Main function """
-	
+
 	log_file = open("pylint.log", "wt")
 	py_files = [y for x in os.walk("..") for y in glob(os.path.join(x[0], '*.py'))]
 

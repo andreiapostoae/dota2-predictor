@@ -1,26 +1,30 @@
+""" Converts the y column in one hot format """
 import csv
-import numpy as np
 
-f = open("complete.csv", "rt")
-csv_reader = csv.reader(f, delimiter=",")
+def main():
+	""" Main function """
+	input_file = open("complete.csv", "rt")
+	csv_reader = csv.reader(input_file, delimiter=",")
 
-output = open("complete_augmented.csv", "wt")
-csv_writer = csv.writer(output, delimiter=',')
+	output = open("complete_augmented.csv", "wt")
+	csv_writer = csv.writer(output, delimiter=',')
 
-data_list = list(csv_reader)
+	data_list = list(csv_reader)
 
-for row in data_list:
-	new_row = []
-	new_row.append(int(row[0]))
-	if row[1] == '0':
-		new_row.extend([0, 1])
-	else:
-		new_row.extend([1, 0])
+	for row in data_list:
+		new_row = []
+		new_row.append(int(row[0]))
+		if row[1] == '0':
+			new_row.extend([0, 1])
+		else:
+			new_row.extend([1, 0])
 
-	new_row.extend(row[2:])
+		new_row.extend(row[2:])
 
-	#if int(row[13]) > 3000:
-	csv_writer.writerow(new_row)
+		csv_writer.writerow(new_row)
 
-f.close()
-output.close()
+	input_file.close()
+	output.close()
+
+if __name__ == "__main__":
+	main()

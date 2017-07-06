@@ -1,8 +1,28 @@
 """ Helper module for evaluating a trained model and plotting the learning curves """
+import json
+import logging
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
+
+
+def get_hero_names(path=''):
+	""" Returns a map of (index_hero, hero_name)
+
+	path -- relative path to heroes.json
+	"""
+
+	with open(path + 'preprocessing/heroes.json') as data_file:
+		data = json.load(data_file)
+
+	result = data["heroes"]
+	hero_map = {}
+	for hero in result:
+		hero_map[hero["id"]] = hero["localized_name"]
+
+	return hero_map
+
 
 def evaluate_model(model, data_list):
 	""" Evaluates accuracy, area under curve and f1-score for a trained model
@@ -21,10 +41,13 @@ def evaluate_model(model, data_list):
 	roc_auc_score = metrics.roc_auc_score(y_test, probabilities[:, 1])
 	f1_score = metrics.f1_score(y_test, predicted)
 
-	print "Data set size: %d" % dataset_size
-	print "Raw accuracy: %.3f" % raw_accuracy
-	print "ROC AUC score: %.3f" % roc_auc_score
-	print "F1 score: %.3f" % f1_score
+	logging.basicConfig(level=logging.INFO)
+	logger = logging.getLogger(__name__)
+
+	logger.info("Data set size: %d", dataset_size)
+	logger.info("Raw accuracy: %.3f", raw_accuracy)
+	logger.info("ROC AUC score: %.3f", roc_auc_score)
+	logger.info("F1 score: %.3f", f1_score)
 
 	return [dataset_size, raw_accuracy, roc_auc_score, f1_score]
 
@@ -112,7 +135,7 @@ def heatmap(dicts, index=0, show_color=0, on_screen=1):
 	fig = plt.figure(figsize=(15, 15))
 
 	axes = fig.add_subplot(111)
-	axes.set_title(title)
+	axes.set_title(title + " @ 7.06d")
 	plt.imshow(heatmap_data)
 	axes.set_aspect('equal')
 
@@ -125,12 +148,12 @@ def heatmap(dicts, index=0, show_color=0, on_screen=1):
 
 	if on_screen == 0:
 		filename = "heatmap" + str(index) + ".png"
-		pylab.savefig(filename, bbox_inches='tight')
+		plt.savefig(filename, bbox_inches='tight')
 	else:
 		plt.colorbar(orientation='vertical')
 		plt.show()
 
-def hero_winrates(self, radiant=1):
+def plot_hero_winrates(radiant_winrates, dire_winrates, target_mmr, offset_mmr, radiant=1):
 	""" Calculates the hero winrates over the filtered games
 
 	radiant (optional) -- 1 for radiant games (default)
@@ -142,13 +165,22 @@ def hero_winrates(self, radiant=1):
 	hero_list = []
 
 	for i in range(114):
-		if i != 23:
-			hero_list.append(i + 1)
+		if i <= 22:
+			hero_list.append(i)
 
 			if radiant == 1:
-				heroes_dict[self.dicts[3]['winrate'][i]] = hero_map[i + 1]
+				heroes_dict[radiant_winrates['winrate'][i]] = hero_map[i + 1]
 			else:
-				heroes_dict[self.dicts[4]['winrate'][i]] = hero_map[i + 1]
+				heroes_dict[dire_winrates['winrate'][i]] = hero_map[i + 1]
+
+		else:
+			if i != 23:
+				hero_list.append(i - 1)
+
+				if radiant == 1:
+					heroes_dict[radiant_winrates['winrate'][i]] = hero_map[i + 1]
+				else:
+					heroes_dict[dire_winrates['winrate'][i]] = hero_map[i + 1]
 
 	keys = heroes_dict.keys()
 	keys.sort(reverse=True)
@@ -156,13 +188,14 @@ def hero_winrates(self, radiant=1):
 	fig = plt.figure(figsize=(20, 20))
 	axes = fig.add_subplot(111)
 
-	axes.set_ylim([0, 115])
-	axes.set_xlim([0, 1])
+	axes.set_ylim([-1, 113])
+	axes.set_xlim([0, 0.7])
 	axes.invert_yaxis()
 
 	sorted_values = []
 	for key in keys:
 		sorted_values.append(heroes_dict.get(key))
+
 
 	plt.yticks(hero_list, sorted_values, size=5)
 
@@ -173,7 +206,7 @@ def hero_winrates(self, radiant=1):
 		axes.text(width * 1.03, rect.get_y() + rect.get_height()/2. + 0.75, \
 			'%.2f%%' % (width * 100), ha='center', va='bottom', size=6)
 
-	plt.title('Radiant winrate at %d - %d MMR' % (self.target_mmr - self.offset_mmr, \
-		self.target_mmr + self.offset_mmr), size=20)
+	plt.title('Radiant winrate at %d - %d MMR @ 7.06d' % (target_mmr - offset_mmr, \
+		target_mmr + offset_mmr), size=20)
 	plt.show()
 

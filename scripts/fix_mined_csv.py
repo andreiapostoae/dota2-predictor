@@ -1,12 +1,18 @@
-import csv
+""" Repairs the mined data """
 import pandas as pd
 
-df = pd.read_csv("part3.csv")
+def main():
+	""" main function """
+	dataframe = pd.read_csv("part3.csv")
 
-cols = df.columns.tolist()
+	cols = dataframe.columns.tolist()
 
-cols = [cols[0]] + [cols[-1]] + cols[1:-1]
+	cols = [cols[0]] + [cols[-1]] + cols[1:-1]
 
-df = df[cols]
+	dataframe = dataframe[cols]
 
-df.to_csv("part3_repaired.csv", sep=',', index=False)
+	dataframe.to_csv("part3_repaired.csv", sep=',', index=False)
+
+if __name__ == "__main__":
+	main()
+

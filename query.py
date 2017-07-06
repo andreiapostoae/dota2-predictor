@@ -4,7 +4,7 @@ import sys
 import json
 import pickle
 from sklearn.externals import joblib
-from preprocessing.prepare_data import index_heroes, calculate_rating
+from training.logistic_regression import index_heroes
 
 def open_dictionaries(filename):
 	""" Loads winrate of synergies and counter dictionaries
@@ -48,14 +48,10 @@ def main():
 		hero_id = find_hero_id(name, heroes)
 		query_list.append(hero_id)
 
-	dicts = open_dictionaries("pretrained/" + str(mmr) + "_dicts.pkl")
+	# dicts = open_dictionaries("pretrained/" + str(mmr) + "_dicts.pkl")
 	model = joblib.load("pretrained/" + str(mmr) + ".pkl")
 
 	indexed_heroes = index_heroes(query_list)
-	[synergy, counter] = calculate_rating(query_list, dicts[0], dicts[1], dicts[2])
-
-	indexed_heroes.append(synergy)
-	indexed_heroes.append(counter)
 
 	result = model.predict_proba([indexed_heroes])
 	print "Radiant chance: %.3f%%" % (result[0][1] * 100)

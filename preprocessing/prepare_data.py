@@ -5,17 +5,11 @@ preprocessing/ml_header.csv
 
 import csv
 import sys
-import json
-import numpy as np
-from math import ceil
-from matplotlib import pyplot as plt
-from matplotlib import pylab
+import logging
 
 NUMBER_OF_HEROES = 114
 DEFAULT_MMR_OFFSET = 500
 TEST_RATIO = 0.25
-
-
 
 
 class DataPreprocess(object):
@@ -50,7 +44,6 @@ class DataPreprocess(object):
 		for i in range(length):
 			current_game = self.games_list[i]
 			current_mmr = int(current_game[13])
-			radiant_win = int(current_game[1])
 
 			if self.is_mmr_valid(current_mmr):
 				filtered_list.append(current_game[1:12])
@@ -63,18 +56,22 @@ class DataPreprocess(object):
 				csv_writer.writerow(match)
 		else:
 			return filtered_list
-	
-	
+
 
 def main():
 	""" Main method """
+	logging.basicConfig(level=logging.INFO)
+	logger = logging.getLogger(__name__)
+
 	if len(sys.argv) < 3:
-		sys.exit("Usage: %s input_file output_file MMR [offset]" % sys.argv[0])
+		logger.critical("Usage: %s input_file output_file MMR [offset]", sys.argv[0])
+		sys.exit(1)
 
 	try:
 		in_file = open(sys.argv[1], "rt")
 	except IOError:
-		sys.exit("Invalid input file")
+		logger.critical("Invalid input file %s", sys.argv[1])
+		sys.exit(1)
 
 	csv_reader = csv.reader(in_file, delimiter=",")
 	full_list = list(csv_reader)
@@ -82,21 +79,24 @@ def main():
 	try:
 		out_file = open(sys.argv[2], "wt")
 	except IOError:
-		sys.exit("Invalid output file")
+		logger.critical("Invalid input file")
+		sys.exit(1)
 
 	try:
 		mmr = int(sys.argv[3])
 	except ValueError:
-		sys.exit("Invalid MMR")
+		logger.critical("Invalid input file")
+		sys.exit(1)
 
 	if mmr < 0 or mmr > 5000:
-		sys.exit("Invalid MMR")
+		logger.critical("Invalid input file")
+		sys.exit(1)
 
 	try:
 		offset = int(sys.argv[4])
 		data_preprocess = DataPreprocess(full_list, mmr, offset, out_file)
 	except IndexError:
-		print "The offset is invalid. Using the default offset (%d)" % DEFAULT_MMR_OFFSET
+		logger.error("The offset is invalid. Using the default offset (%d)", DEFAULT_MMR_OFFSET)
 		data_preprocess = DataPreprocess(full_list, mmr, out_file)
 
 	data_preprocess.run()
