@@ -60,7 +60,7 @@ def give_result(query_list, faction, model, logger):
 	if faction == 'Radiant':
 		logger.info("Radiant chance: %.3f%%", (result[0][1] * 100))
 	else:
-		logger.info("Radiant chance: %.3f%%", (result[0][0] * 100))
+		logger.info("Dire chance: %.3f%%", (result[0][0] * 100))
 
 
 def process_query_list(query_list, heroes, faction, model, logger):
