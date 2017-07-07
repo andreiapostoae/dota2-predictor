@@ -104,8 +104,8 @@ class LogReg(object):
 		logging.basicConfig(level=logging.INFO)
 		logger = logging.getLogger(__name__)
 
-		logger.info("Training set size: %d", train_len)
-		logger.info("Test set size: %d", test_len)
+		logger.info("%-25s %d", "Training set size:", train_len)
+		logger.info("%-25s %d", "Test set size:", test_len)
 
 		x_train_new = np.zeros((x_train.shape[0], NUMBER_OF_FEATURES))
 		x_test_new = np.zeros((x_test.shape[0], NUMBER_OF_FEATURES))

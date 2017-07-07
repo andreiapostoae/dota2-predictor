@@ -44,10 +44,10 @@ def evaluate_model(model, data_list):
 	logging.basicConfig(level=logging.INFO)
 	logger = logging.getLogger(__name__)
 
-	logger.info("Data set size: %d", dataset_size)
-	logger.info("Raw accuracy: %.3f", raw_accuracy)
-	logger.info("ROC AUC score: %.3f", roc_auc_score)
-	logger.info("F1 score: %.3f", f1_score)
+	logger.info("%-25s %d", "Data set size:", dataset_size)
+	logger.info("%-25s %.3f", "Raw accuracy:", raw_accuracy)
+	logger.info("%-25s %.3f", "ROC AUC score:", roc_auc_score)
+	logger.info("%-25s %.3f", "F1 score:", f1_score)
 
 	return [dataset_size, raw_accuracy, roc_auc_score, f1_score]
 
