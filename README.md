@@ -95,11 +95,11 @@ logreg.run(evaluate=1, winrates=1)
 ```
 
 ### Pretraining models in a MMR interval
-Alternatively, instead of training a single model at a time, you can train multiple models in an interval with your desired offset.
+Alternatively, instead of training a single model at a time, you can train multiple models in an interval with your desired offset. The first argument should be the CSV containing the data, and the second should be the MMR offset
 ```bash
-python pretrain.py 706d.csv
+python pretrain.py 706d.csv 200
 ```
-The MIN_MMR, MAX_MMR and the offset are set within the script, and the models and dictionaries will be saved in the [pretrained](https://github.com/andreiapostoae/dota2-predictor/tree/master/pretrained) folder, as well as a [CSV file](https://github.com/andreiapostoae/dota2-predictor/blob/master/pretrained/results.csv) containing the statistics for every model.
+The MIN_MMR, MAX_MMR are set within the script, and the models and dictionaries will be saved in the [pretrained](https://github.com/andreiapostoae/dota2-predictor/tree/master/pretrained) folder, as well as a [CSV file](https://github.com/andreiapostoae/dota2-predictor/blob/master/pretrained/results.csv) containing the statistics for every model.
 
 
 ## Author's note
