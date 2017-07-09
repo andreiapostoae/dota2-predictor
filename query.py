@@ -76,7 +76,7 @@ def process_query_list(query_list, heroes, faction, model, logger):
 	probabilities_dict = {}
 
 	for i in range(114):
-		if i + 1 not in query_list and i != 24:
+		if i + 1 not in query_list and i != 23:
 			if faction == 'Radiant':
 				query_list.insert(0, i)
 			else:
@@ -98,7 +98,7 @@ def process_query_list(query_list, heroes, faction, model, logger):
 		value = round(value, 3)
 
 		for hero in heroes:
-			if hero["id"] == hero_id:
+			if hero["id"] == hero_id + 1:
 				logger.info("%-25s %s%%", hero["localized_name"], value)
 				break
 
