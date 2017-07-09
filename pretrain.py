@@ -65,7 +65,7 @@ def main():
 	try:
 		offset = int(sys.argv[2])
 	except ValueError:
-		logger.critical("Usage: %s input_file MMR [offset]", sys.argv[0])
+		logger.critical("Usage: %s input_file offset", sys.argv[0])
 		sys.exit(1)
 
 	output_path = FOLDER + "/results.csv"
