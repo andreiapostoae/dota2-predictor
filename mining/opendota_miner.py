@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """ This module mines from opendota public API given a list of games
 The output is in the format specified in mining_headers.csv
 """
