@@ -78,9 +78,9 @@ def process_query_list(query_list, heroes, faction, model, logger):
 	for i in range(114):
 		if i + 1 not in query_list and i != 23:
 			if faction == 'Radiant':
-				query_list.insert(0, i)
+				query_list.insert(0, i+1)
 			else:
-				query_list.append(i)
+				query_list.append(i+1)
 
 			indexed_heroes = index_heroes(query_list)
 			result = model.predict_proba([indexed_heroes])
