@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+
 """ This module mines relevant match IDs from the Steam API """
+from __future__ import print_function
 import json
 import sys
 import urllib
@@ -19,10 +22,7 @@ def valid(match_json):
 	match_json -- dictionary of a single match taken from the response json
 	"""
 	for player in match_json['players']:
-		try:
-			if player['leaver_status'] == 1:
-				return False
-		except KeyError:
+		if player.get('leaver_status', 1) == 1:
 			return False
 
 	if match_json['duration'] < MIN_DURATION:
@@ -90,10 +90,7 @@ class SteamMiner(object):
 		remainder = self.games_number - chunks * 100
 
 		for i in range(chunks + 1):
-			if i == chunks:
-				url = self.get_url(remainder)
-			else:
-				url = self.get_url(100)
+			url = self.get_url(remainder if i == chunks else 100)
 
 			response_json = self.get_response(url)
 
@@ -103,7 +100,7 @@ class SteamMiner(object):
 					self.out_file.write(str(match_id) + "\n")
 				self.seq_num = match['match_seq_num'] + 1
 
-			print "Processed %d games" % ((i + 1) * 100)
+			print("Processed %d games" % ((i + 1) * 100))
 
 def main():
 	""" Main function """

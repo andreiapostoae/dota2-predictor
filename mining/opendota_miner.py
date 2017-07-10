@@ -1,7 +1,10 @@
+#!/usr/bin/env python
+
 """ This module mines from opendota public API given a list of games
 The output is in the format specified in mining_headers.csv
 """
 
+from __future__ import print_function
 import csv
 import json
 import sys
@@ -39,18 +42,18 @@ class OpendotaMiner(object):
 		try:
 			game_json = json.load(response)
 		except ValueError:
-			print "Error parsing JSON at game " + str(game)
+			print("Error parsing JSON at game " + str(game))
 			return
 
 		if "error" in game_json:
-			print "Response error at game " + str(game)
+			print("Response error at game " + str(game))
 			if retries < MAX_RETRIES:
 				time.sleep(REQUEST_TIMEOUT)
 				self.process_request(game, retries + 1)
 			return
 
 		if "radiant_win" not in game_json:
-			print "JSON is corrupted, skipping " + str(game)
+			print("JSON is corrupted, skipping " + str(game))
 			return
 		else:
 			radiant_win = game_json["radiant_win"]
@@ -65,7 +68,7 @@ class OpendotaMiner(object):
 			try:
 				player = players_list[i]
 			except IndexError:
-				print "Index error at game " + str(game)
+				print("Index error at game " + str(game))
 				return
 
 			csv_entry += str(player["hero_id"]) + ","
@@ -75,18 +78,9 @@ class OpendotaMiner(object):
 				mmr_sum += int(player["solo_competitive_rank"])
 
 		csv_entry += str(mmr_shown) + ","
-		if mmr_shown > 0:
-			mmr_avg = int(mmr_sum / mmr_shown)
-		else:
-			mmr_avg = -1
-
+		mmr_avg = int(mmr_sum / mmr_shown) if mmr_shown > 0 else -1
 		csv_entry += str(mmr_avg) + ","
-
-		if radiant_win:
-			csv_entry += "1\n"
-		else:
-			csv_entry += "0\n"
-
+		csv_entry += "1\n" if radiant_win else "0\n"
 		self.output_file.write(csv_entry)
 
 	def run(self):
@@ -98,7 +92,7 @@ class OpendotaMiner(object):
 
 			if i % 10 == 9:
 				elapsed_time = time.time() - start_time
-				print "Processed %d games in %.2f seconds." % (i + 1, elapsed_time)
+				print("Processed %d games in %.2f seconds." % (i + 1, elapsed_time))
 
 			time.sleep(REQUEST_TIMEOUT)
 
@@ -127,10 +121,7 @@ def main():
 	csv_reader = csv.reader(in_file, delimiter=",")
 	full_list = list(csv_reader)
 
-	games_list = []
-	for j in range(games_number):
-		games_list.append(full_list[j][0])
-
+	games_list = [full_list[j][0] for j in range(games_number)]
 	miner = OpendotaMiner(games_list, out_file)
 	miner.run()
 
