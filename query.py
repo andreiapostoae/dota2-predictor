@@ -59,8 +59,10 @@ def give_result(query_list, faction, model, logger):
 
 	if faction == 'Radiant':
 		logger.info("Radiant chance: %.3f%%", (result[0][1] * 100))
+		return result[0][1] * 100
 	else:
 		logger.info("Dire chance: %.3f%%", (result[0][0] * 100))
+		return result[0][0] * 100
 
 
 def process_query_list(query_list, heroes, faction, model, logger):
@@ -92,7 +94,7 @@ def process_query_list(query_list, heroes, faction, model, logger):
 				probabilities_dict[i] = result[0][0] * 100
 				del query_list[-1]
 
-	sorted_dict = sorted(probabilities_dict.items(), key=operator.itemgetter(1))
+	sorted_dict = sorted(probabilities_dict.items(), key=operator.itemgetter(1), reverse=True)
 
 	for (hero_id, value) in sorted_dict:
 		value = round(value, 3)
@@ -101,6 +103,8 @@ def process_query_list(query_list, heroes, faction, model, logger):
 			if hero["id"] == hero_id + 1:
 				logger.info("%-25s %s%%", hero["localized_name"], value)
 				break
+
+	return sorted_dict
 
 
 def main():
