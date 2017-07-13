@@ -190,17 +190,17 @@ def main():
 	root.maxsize(width=450, height=480)
 
 	radiant_label = Label(root, text="Radiant team")
-	radiant_label.grid(column=0, row=0, pady=10, padx=20)
+	radiant_label.place(relx=0.15, rely=0.02)
 
 	dire_label = Label(root, text="Dire team")
-	dire_label.grid(column=1, row=0, pady=10)
+	dire_label.place(relx=0.67, rely=0.02)
 	
 	predict_button = Button(root, text="Predict winner", command=process_query)
-	predict_button.grid(column=0, row=6, sticky=E, pady=30)
+	predict_button.place(relx=0.22, rely=0.45)
 	predict_button.config(state="disabled")
 
 	suggest_button = Button(root, text="Suggest hero", command=process_query)
-	suggest_button.grid(column=1, row=6, sticky=W, pady=30)
+	suggest_button.place(relx=0.5, rely=0.45)
 	suggest_button.config(state="disabled")
 
 	boxes = []
@@ -212,7 +212,7 @@ def main():
 		box['values'] = hero_list
 		box.current(0)
 
-		box.grid(column=i / 5, row=i % 5 + 1, pady=5, padx=20)
+		box.place(relx=(i / 5) * 0.5 + 0.05, rely=(i % 5) * 0.05 + 0.1)
 		box.bind("<<ComboboxSelected>>", ComboBoxSelected)
 		boxes.append(box)
 
