@@ -8,7 +8,7 @@ import sys
 import logging
 
 NUMBER_OF_HEROES = 114
-DEFAULT_MMR_OFFSET = 500
+DEFAULT_MMR_OFFSET = 200
 TEST_RATIO = 0.25
 
 
@@ -94,10 +94,10 @@ def main():
 
 	try:
 		offset = int(sys.argv[4])
-		data_preprocess = DataPreprocess(full_list, mmr, offset, out_file)
+		data_preprocess = DataPreprocess(full_list, mmr, offset=offset, output_handle=out_file)
 	except IndexError:
 		logger.error("The offset is invalid. Using the default offset (%d)", DEFAULT_MMR_OFFSET)
-		data_preprocess = DataPreprocess(full_list, mmr, out_file)
+		data_preprocess = DataPreprocess(full_list, mmr, output_handle=out_file)
 
 	data_preprocess.run()
 

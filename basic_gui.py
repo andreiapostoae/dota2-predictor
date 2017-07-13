@@ -3,6 +3,7 @@ import ttk
 import json
 import logging
 import pickle
+import os
 from os import listdir
 from sklearn.externals import joblib
 from query import process_query_list, give_result
@@ -19,7 +20,7 @@ def get_hero_id(localized_name):
 
 def get_full_hero_list():
 	global heroes_json_data
-	json_data = json.load(open("preprocessing/heroes.json", "rt"))
+	json_data = json.load(open(os.path.join('preprocessing', 'heroes.json'), "rt"))
 
 	hero_list = []
 	heroes_json_data = json_data["heroes"]

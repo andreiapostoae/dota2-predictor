@@ -5,6 +5,7 @@ import json
 import pickle
 import logging
 import operator
+import os
 from os import listdir
 from sklearn.externals import joblib
 from training.logistic_regression import index_heroes
@@ -123,7 +124,7 @@ def main():
 		input_error(logger)
 		sys.exit(1)
 
-	json_data = json.load(open("preprocessing/heroes.json", "rt"))
+	json_data = json.load(open(os.path.join('preprocessing', 'heroes.json'), "rt"))
 	heroes = json_data["heroes"]
 
 	file_list = [int(valid_file[:-4]) for valid_file in listdir('pretrained') \
@@ -145,7 +146,7 @@ def main():
 
 	logger.info("Using closest model available: %d MMR", final_mmr)
 
-	model = joblib.load("pretrained/" + str(final_mmr) + ".pkl")
+	model = joblib.load(os.path.join("pretrained", str(final_mmr) + ".pkl"))
 	query_list = []
 
 	for i in range(len(sys.argv) - 3):

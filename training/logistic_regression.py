@@ -167,7 +167,7 @@ class LogReg(object):
 
 		return [model, data_list]
 
-	def run(self, learning_curve=0, heat_map=0, evaluate=0, winrates=0):
+	def run(self, learning_curve=0, heat_map=0, evaluate=1, winrates=0):
 		""" Does the training 
 			
 			learning_curve (optional) -- set to 1 to display learning curve
@@ -191,7 +191,7 @@ def main():
 	logger = logging.getLogger(__name__)
 
 	if len(sys.argv) < 3:
-		logger.critical("Usage: %s input_file MMR [offset]", sys.argv[0])
+		logger.critical("Usage: %s input_file MMR [offset] [model_file]", sys.argv[0])
 		sys.exit(1)
 
 	try:
@@ -224,8 +224,8 @@ def main():
 
 	logger.info("Finished data preprocessing")
 
-	logreg = LogReg(filtered_list, mmr, offset)
-	logreg.run(evaluate=1)
+	logreg = LogReg(filtered_list, mmr, offset, output_model=sys.argv[4])
+	logreg.run()
 
 if __name__ == "__main__":
 	main()
