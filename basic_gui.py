@@ -212,7 +212,7 @@ def main():
 		box['values'] = hero_list
 		box.current(0)
 
-		box.place(relx=(i / 5) * 0.5 + 0.05, rely=(i % 5) * 0.05 + 0.1)
+		box.place(relx=(i / 5) * 0.5 + 0.07, rely=(i % 5) * 0.05 + 0.1)
 		box.bind("<<ComboboxSelected>>", ComboBoxSelected)
 		boxes.append(box)
 
@@ -236,7 +236,7 @@ def main():
 	info_label2.place(x=10, y=270)
 
 	label = Label(root, text="Andrei Apostoae, July 2017")
-	label.place(x=270, y=460)
+	label.place(x=300, y=460)
 	label.configure(foreground="gray")
 
 	label = Label(root, text="Current patch: 7.06d")

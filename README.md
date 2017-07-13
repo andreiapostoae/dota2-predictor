@@ -11,6 +11,15 @@ For the first case, you should select all the heroes, write the average MMR and 
 
 For the second case, you should select all the other nine heroes in their corresponding team, write the average MMR and press the "Suggest hero" button. A list of top 10 hero suggestions will be displayed.
 
+| [![Suggest Hero](http://i.imgur.com/xbh8903.png)](http://i.imgur.com/xbh8903.png)  | [![Predict winner](http://i.imgur.com/MXDhZt2.png)](http://i.imgur.com/MXDhZt2.png)  |
+|:---:|:---:|
+| Suggest Hero | Predict Winner | 
+
+
+
+
+
+
 
 ## Downloading and running
 ### Linux
@@ -32,8 +41,9 @@ Alternatively, you could install Anaconda which installs the packages by itself,
 
 1. Download the [zip file](https://github.com/andreiapostoae/dota2-predictor/archive/master.zip) of this repository and unzip it.
 2. Install [Anaconda with Python 2.7](https://www.continuum.io/downloads) in order to have the packages mentioned in the requirements.txt already installed, without you having to manually do it. 
-3. Run Anaconda Command Prompt.
-4. Navigate to the folder where you unzipped and run the GUI script.
+3. Double-click basic_gui.py, open with *C:\Users\your_user\Anaconda2\python.exe*, check "Always use this app to open .py files". You will not get prompted when you run it again. If nothing happened, go to step 4.
+4. Run Anaconda Prompt.
+5. Navigate to the folder where you unzipped and run the GUI script.
 ```bash
 cd C:\Users\Apo\Desktop\dota2-predictor
 python basic_gui.py
