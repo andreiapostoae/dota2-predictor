@@ -53,7 +53,8 @@ class LogReg(object):
 	""" Class for using the logistic regression algorithm, given the preprocessed data
 
 	filtered_list -- list of games that are valid for the query
-	dictionaries -- preprocessed synergy and counter data
+	mmr -- average MMR for the filtered results
+	offset -- MMR offset from the average
 	output_model (optional) -- filename for the model to be outputted to (pkl format)
 	"""
 
@@ -95,6 +96,8 @@ class LogReg(object):
 	def construct_dicts(self, split_list):
 		"""
 		adds new features using the dictionaries containing synergies
+
+		split_list -- list of training data split in train and test
 		"""
 
 		[x_train, x_test, y_train, y_test] = split_list
@@ -133,8 +136,11 @@ class LogReg(object):
 		""" Trains the model given the data list
 
 		data_list -- X and y matrices split into train and test
-		evaluate_model -- show model metrics
-		learning_curve (optional) -- set to 1 for plotting the learning curve
+		options (optional) -- tuple in which a 1 field means that option is enabled
+								* model evaluation
+								* learning curve
+								* heatmap
+								* hero winrates
 		"""
 
 		[x_train, _, y_train, _] = data_list
@@ -162,7 +168,14 @@ class LogReg(object):
 		return [model, data_list]
 
 	def run(self, learning_curve=0, heat_map=0, evaluate=0, winrates=0):
-		""" Does the training """
+		""" Does the training 
+			
+			learning_curve (optional) -- set to 1 to display learning curve
+			heat_map (optional) -- set to 1 to display heat map
+			evaluate (optional) -- set to 1 to evaluate model
+			winrates (optional) -- set to 1 to display hero winrates graph
+		"""
+
 		matrix = self.construct_nparray()
 		[x_train, x_test, y_train, y_test] = split_data(matrix)
 
@@ -170,6 +183,7 @@ class LogReg(object):
 		results = self.train_model(aux_list, \
 									(evaluate, learning_curve, heat_map, winrates))
 		return results
+
 
 def main():
 	""" Main function """

@@ -2,6 +2,7 @@
 import json
 import logging
 import numpy as np
+import os
 from matplotlib import pyplot as plt
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
@@ -13,7 +14,7 @@ def get_hero_names(path=''):
 	path -- relative path to heroes.json
 	"""
 
-	with open(path + 'preprocessing/heroes.json') as data_file:
+	with open(os.path.join(path, 'preprocessing', 'heroes.json')) as data_file:
 		data = json.load(data_file)
 
 	result = data["heroes"]
@@ -156,6 +157,10 @@ def heatmap(dicts, index=0, show_color=0, on_screen=1):
 def plot_hero_winrates(radiant_winrates, dire_winrates, target_mmr, offset_mmr, radiant=1):
 	""" Calculates the hero winrates over the filtered games
 
+	radiant_winrates -- dict with radiant winrates of each hero
+	dire_winrates -- dict with dire winrates of each hero
+	target_mmr -- average MMR of the filtered games
+	offset_mmr -- MMR offset from the average MMR
 	radiant (optional) -- 1 for radiant games (default)
 						  0 for dire games
 	"""

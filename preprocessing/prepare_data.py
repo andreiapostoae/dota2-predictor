@@ -17,9 +17,9 @@ class DataPreprocess(object):
 	desired range and arranging data for the machine learning algorithm
 
 	list_of_games -- games to be processed
-	output_handle -- opened output file where the processed data is written
 	mmr -- target MMR
 	offset (optional) -- how far from the target MMR should the search be done
+	output_handle (optional) -- opened output file where the processed data is written
 	"""
 
 	def __init__(self, list_of_games, mmr, offset=DEFAULT_MMR_OFFSET, output_handle=None):

@@ -1,12 +1,13 @@
-""" Converts the y column in one hot format """
+""" Converts the y column in one hot format for the NN notebook """
 import csv
+import sys
 
 def main():
 	""" Main function """
-	input_file = open("complete.csv", "rt")
+	input_file = open(sys.argv[1], "rt")
 	csv_reader = csv.reader(input_file, delimiter=",")
 
-	output = open("complete_augmented.csv", "wt")
+	output = open("augmented_" + sys.argv[1], "wt")
 	csv_writer = csv.writer(output, delimiter=',')
 
 	data_list = list(csv_reader)

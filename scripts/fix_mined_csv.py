@@ -3,7 +3,7 @@ import pandas as pd
 
 def main():
 	""" main function """
-	dataframe = pd.read_csv("part3.csv")
+	dataframe = pd.read_csv(sys.argv[1])
 
 	cols = dataframe.columns.tolist()
 
@@ -11,7 +11,7 @@ def main():
 
 	dataframe = dataframe[cols]
 
-	dataframe.to_csv("part3_repaired.csv", sep=',', index=False)
+	dataframe.to_csv("repaired" + sys.argv[1], sep=',', index=False)
 
 if __name__ == "__main__":
 	main()

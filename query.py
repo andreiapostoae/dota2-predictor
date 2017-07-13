@@ -26,6 +26,7 @@ def find_hero_id(name, hero_list, logger=logging.getLogger(__name__)):
 
 	name -- popular name, including abbreviations
 	hero_list -- list of heroes clipped from heroes.json
+	logger -- Logger object to redirect output to
 	"""
 
 	for hero in hero_list:
