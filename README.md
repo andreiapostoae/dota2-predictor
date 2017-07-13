@@ -1,43 +1,42 @@
 # dota2-predictor
 
 ## Overview
-dota2-predictor is a tool that uses Machine Learning over a dataset of over 500000 past matches in order to predict the outcome of a game. This project achieves roughly 0.63 ROC AUC score using both logistic regression and neural networks.
-
-## Requirements
-The project requires a handful of python packages. Install them using:
-```bash
-pip install -r requirements.txt
-```
+dota2-predictor is a tool that uses Machine Learning over a dataset of over 500k past matches in order to predict the outcome of a game. This project achieves roughly 0.63 ROC AUC score using both logistic regression and neural networks.
 
 ## Basic usage
-dota2-predictor has two main use cases: one for simply predicting the outcome of the game knowing all the heroes and one for predicting what the best last pick is given a configuration of the other nine heroes.
 
-You can customise your preferred hero names in the preprocessing/heroes.json file.
+The tool has two main use cases: one for simply predicting the outcome of the game knowing all the heroes and one for predicting what the best last pick is given a configuration of the other nine heroes. It uses the closest model available given the average MMR of your game.
 
-### Predicting the outcome of the game
+For the first case, you should select all the heroes, write the average MMR and press the "Predict winner" button.
+
+For the second case, you should select all the other nine heroes in their corresponding team, write the average MMR and press the "Suggest hero" button. A list of top 10 hero suggestions will be displayed.
+
+
+## Downloading and running
+### Linux
+
+The project requires Python 2.7, pip, and a handful of Python packages. Install those packages using the following commands in a terminal:
 ```bash
-python query.py 3520 Dire Luna SD WK TA PA AM Kunkka Tide Phoenix Zeus
+git clone https://github.com/andreiapostoae/dota2-predictor.git
+cd dota2-predictor
+pip install -r requirements.txt
 ```
-The first argument is the average MMR of your game and is followed by a list of the 10 heroes: first 5 must be the radiant team and last 5 must be the dire team.
-The program will find you the best pretrained model given the average MMR of the game and output the chance to win.
-```
-Using closest model available: 3500 MMR
-Dire chance: 47.217%
+For starting the tool:
+```bash
+python basic_gui.py
 ```
 
-### Predicting the best last pick
+Alternatively, you could install Anaconda which installs the packages by itself, then run the basic_gui.py script in a conda environment. 
+
+### Windows
+
+1. Download the [zip file](https://github.com/andreiapostoae/dota2-predictor/archive/master.zip) of this repository and unzip it.
+2. Install [Anaconda with Python 2.7](https://www.continuum.io/downloads) in order to have the packages mentioned in the requirements.txt already installed, without you having to manually do it. 
+3. Run Anaconda Command Prompt.
+4. Navigate to the folder where you unzipped and run the GUI script.
 ```bash
-python query.py 3520 Radiant Luna SD WK TA PA AM Kunkka Tide Phoenix
-```
-The main difference from the previous example is that now you only input 9 heroes, in their respective order. You will get a list of possible picks and their corresponding chances in order to increase your chances of winning the game.
-```
-Wisp                      40.068%
-Alchemist                 40.801%
-Oracle                    41.269%
-[...]
-Sven                      60.3%
-Ursa                      60.561%
-Abyssal Underlord         63.929%
+cd C:\Users\Apo\Desktop\dota2-predictor
+python basic_gui.py
 ```
 
 ## Advanced usage
@@ -56,24 +55,21 @@ python opendota_miner.py list.csv output.csv NUM_GAMES
 
 ### Training a model
 The raw input CSV are filtered using a DataPreprocess object and the remaining games will be given as input for the Logistic Regression.
-```python
-# filter the games in the [mmr - offset, mmr + offset] interval
-data_preprocess = DataPreprocess(full_list, mmr, offset)
-filtered_list = data_preprocess.run()
-
-# instantiate a LogReg object using the filtered games
-log_reg = LogReg(filtered_list, mmr, offset, output_model="my_model")
-
-# set evaluate to 1 to display information about the dataset and the training accuracy
-logreg.run(evaluate=1)
+```bash
+python -m training.logistic_regression 706d.csv 3000 200 model
 ```
+- 706d.csv = CSV file of your mined games
+- 3000 = target MMR
+- 200 = offset MMR (meaning the games will be in the [2800, 3200] interval)
+- model = name of output model file, saved in pkl file
 
-This will save your model and synergy dictionaries in pickle format, which you can load and query later using the functions in evaluate.py.
 
 ### Plotting the learning curve
-You can plot the learning curve of your model using the learning_curve flag.
+You can plot the learning curve of your model by modifying training/logistic_regression.py script.
+
+Add the learning_curve flag in the main function and train the model normally afterwards.
 ```python
-logreg.run(evaluate=1, learning_curve=1)
+logreg.run(learning_curve=1)
 ```
 ![alt text](http://i.imgur.com/YxOpVtk.png)
 
@@ -82,7 +78,7 @@ While training, statistics about hero synergies and counter synergies are stored
 
 Keep in mind that on both axis, the number represent the heroes indices (e.g. 0 is Anti-Mage, 80 is Chaos Knight etc).
 ```python
-logreg.run(evaluate=1, heat_map=1)
+logreg.run(heat_map=1)
 ```
 
 ![alt text](http://i.imgur.com/eonS02J.png)
@@ -91,7 +87,7 @@ logreg.run(evaluate=1, heat_map=1)
 Data about hero winrates during the training phase can be plotted using the winrates flag.
 As there are 113 heroes currently, it is hard to fit the plot in this README, but you can find it [here](http://i.imgur.com/Sf2WRAx.png).
 ```python
-logreg.run(evaluate=1, winrates=1)
+logreg.run(winrates=1)
 ```
 
 ### Pretraining models in a MMR interval
@@ -113,3 +109,24 @@ There is also the human factor that strongly influences the outcome of a game, s
 This tool, however, is up-to-date with the current patch and does a decent job predicting your best possible last pick given a situation in order to give you that little extra chance that turns the tides in your favor.
 
 Good luck in your matches and game on!
+
+## FAQ
+
+1. Only 60% accuracy? That is not much better than predicting that radiant always wins.
+  * Yes, using logistic regression and neural networks on the current data does not seem to provide better results. However, I have some ideas on slightly improving it.
+
+2. I had a team of 4 carries already and your tool suggested me to pick Spectre. Why?
+  You need to take the results with a grain of salt. The algorithm does not know (at least at this point) how to evaluate a team composition. Simplified, it just looks statistically on past games and evaluates each possible hero that it thinks would work. However, synergy between heroes is not properly modelled.
+
+3. Why does this tool require Anaconda to be used on Windows? Can't you just give us simple .exe?
+  * I tried different approaches regarding how can I make dota2-predictor available to people as fast as possible. Generating a .exe file using pyinstaller (because the code is written in python) results in a file around 200MB. I figured out that not many people would be downloading an executable file from the internet with such size.
+  * Also, installing packages with pip on Windows is a headache, so Anaconda is the simplest solution I have at the moment.
+
+4. Any plan for a web interface so we don't have to install stuff?
+  * Yes! I do not have much web development knowledge at the moment, but I will do my best to make this available to everybody **easily**.
+
+5. Why don't you use only 6k+ games to train your model, because people at that skill level are more versatile?
+  * While this is true, applying 6k logic on a 3k game will not mean the algorithm can correctly guess the outcome. There is also the lack of data on high MMR problem.
+
+6. Do you plan on switching the algorithm?
+  * Yes, I did some k-NearestNeighbors experiments which failed, but options are still open.
