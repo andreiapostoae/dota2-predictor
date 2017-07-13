@@ -117,6 +117,7 @@ Good luck in your matches and game on!
 
 2. I had a team of 4 carries already and your tool suggested me to pick Spectre. Why?
   * You need to take the results with a grain of salt. The algorithm does not know (at least at this point) how to evaluate a team composition. Simplified, it just looks statistically on past games and evaluates each possible hero that it thinks would work. However, synergy between heroes is not properly modelled.
+  * The best solution is to always pick a 5th hero whose role fits in your team and you decently know how to play.
 
 3. Why does this tool require Anaconda to be used on Windows? Can't you just give us simple .exe?
   * I tried different approaches regarding how can I make dota2-predictor available to people as fast as possible. Generating a .exe file using pyinstaller (because the code is written in python) results in a file around 200MB. I figured out that not many people would be downloading an executable file from the internet with such size.
