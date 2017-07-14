@@ -4,14 +4,14 @@
 1. [Overview](#overview)
 2. [Basic usage](#basic)
 3. [Downloading and running](#downloading)
-  * [Linux](#linux)
-  * [Windows](#windows)
+    * [Linux](#linux)
+    * [Windows](#windows)
 4. [Advanced usage](#advanced)
-  * [Downloading new data](#data)
-  * [Training a model](#training)
-  * [Plotting the learning curve](#learning)
-  * [Plotting the heatmap of synergyies and counter synergies](#heatmap)
-  * [Plotting hero winrates](#winrates)
+    * [Downloading new data](#data)
+    * [Training a model](#training)
+    * [Plotting the learning curve](#learning)
+    * [Plotting the heatmap of synergyies and counter synergies](#heatmap)
+    * [Plotting hero winrates](#winrates)
 5. [Author's note](#author)
 6. [FAQ](#faq)
 
@@ -138,21 +138,21 @@ Good luck in your matches and game on!
 ## FAQ <a name="faq"></a>
 
 1. Only 60% accuracy? That is not much better than predicting that radiant always wins.
-  * Yes, using logistic regression and neural networks on the current data does not seem to provide better results. However, I have some ideas on slightly improving it.
+    * Yes, using logistic regression and neural networks on the current data does not seem to provide better results. However, I have some ideas on slightly improving it.
 
 2. I had a team of 4 carries already and your tool suggested me to pick Spectre. Why?
-  * You need to take the results with a grain of salt. The algorithm does not know (at least at this point) how to evaluate a team composition. Simplified, it just looks statistically on past games and evaluates each possible hero that it thinks would work. However, synergy between heroes is not properly modelled.
-  * The best solution is to always pick a 5th hero whose role fits in your team and you decently know how to play.
+    * You need to take the results with a grain of salt. The algorithm does not know (at least at this point) how to evaluate a team composition. Simplified, it just looks statistically on past games and evaluates each possible hero that it thinks would work. However, synergy between heroes is not properly modelled.
+    * The best solution is to always pick a 5th hero whose role fits in your team and you decently know how to play.
 
 3. Why does this tool require Anaconda to be used on Windows? Can't you just give us simple .exe?
-  * I tried different approaches regarding how can I make dota2-predictor available to people as fast as possible. Generating a .exe file using pyinstaller (because the code is written in python) results in a file around 200MB. I figured out that not many people would be downloading an executable file from the internet with such size.
-  * Also, installing packages with pip on Windows is a headache, so Anaconda is the simplest solution I have at the moment.
+    * I tried different approaches regarding how can I make dota2-predictor available to people as fast as possible. Generating a .exe file using pyinstaller (because the code is written in python) results in a file around 200MB. I figured out that not many people would be downloading an executable file from the internet with such size.
+    * Also, installing packages with pip on Windows is a headache, so Anaconda is the simplest solution I have at the moment.
 
 4. Any plan for a web interface so we don't have to install stuff?
-  * Yes! I do not have much web development knowledge at the moment, but I will do my best to make this available to everybody **easily**.
+    * Yes! I do not have much web development knowledge at the moment, but I will do my best to make this available to everybody **easily**.
 
 5. Why don't you use only 6k+ games to train your model, because people at that skill level are more versatile?
-  * While this is true, applying 6k logic on a 3k game will not mean the algorithm can correctly guess the outcome. There is also the lack of data on high MMR problem.
+    * While this is true, applying 6k logic on a 3k game will not mean the algorithm can correctly guess the outcome. There is also the lack of data on high MMR problem.
 
 6. Do you plan on switching the algorithm?
-  * Yes, I did some k-NearestNeighbors experiments which failed, but options are still open.
+    * Yes, I did some k-NearestNeighbors experiments which failed, but options are still open.
