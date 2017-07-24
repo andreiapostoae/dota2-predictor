@@ -203,7 +203,7 @@
         {
             "name": "WK",
             "id": 42,
-            "localized_name": "Skeleton King"
+            "localized_name": "Wraith King"
         },
         {
             "name": "DP",
@@ -378,7 +378,7 @@
         {
             "name": "Lycan",
             "id": 77,
-            "localized_name": "Lycanthrope"
+            "localized_name": "Lycan"
         },
         {
             "name": "Brew",
@@ -408,7 +408,7 @@
         {
             "name": "Treant",
             "id": 83,
-            "localized_name": "Treant Protector"
+            "localized_name": "Treant"
         },
         {
             "name": "Ogre",
@@ -528,7 +528,7 @@
         {
             "name": "Underlord",
             "id": 108,
-            "localized_name": "Abyssal Underlord"
+            "localized_name": "Underlord"
         },
         {
             "name": "TB",
