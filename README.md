@@ -10,7 +10,7 @@
     * [Downloading new data](#data)
     * [Training a model](#training)
     * [Plotting the learning curve](#learning)
-    * [Plotting the heatmap of synergyies and counter synergies](#heatmap)
+    * [Plotting the heatmap of synergies and counter synergies](#heatmap)
     * [Plotting hero winrates](#winrates)
 5. [Author's note](#author)
 6. [FAQ](#faq)
