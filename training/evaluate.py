@@ -3,6 +3,8 @@ import json
 import logging
 import numpy as np
 import os
+import matplotlib
+matplotlib.use("TkAgg")
 from matplotlib import pyplot as plt
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
