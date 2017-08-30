@@ -26,7 +26,7 @@ def find_hero_id(name, hero_list, logger=logging.getLogger(__name__)):
 	""" Returns the id of the hero corresponding to its popular name
 
 	name -- popular name, including abbreviations
-	hero_list -- list of heroes clipped from heroes.json
+	hero_list -- list of heroes clipped from static_data.json
 	logger -- Logger object to redirect output to
 	"""
 
@@ -34,7 +34,7 @@ def find_hero_id(name, hero_list, logger=logging.getLogger(__name__)):
 		if hero["name"] == name:
 			return hero["id"]
 
-	logger.critical("Hero \"%s\" not found. Check heroes.json for the correct names.", name)
+	logger.critical("Hero \"%s\" not found. Check static_data.json for the correct names.", name)
 	sys.exit(1)
 
 def input_error(logger):
@@ -124,7 +124,7 @@ def main():
 		input_error(logger)
 		sys.exit(1)
 
-	json_data = json.load(open(os.path.join('preprocessing', 'heroes.json'), "rt"))
+	json_data = json.load(open(os.path.join('preprocessing', 'static_data.json'), "rt"))
 	heroes = json_data["heroes"]
 
 	file_list = [int(valid_file[:-4]) for valid_file in listdir('pretrained') \

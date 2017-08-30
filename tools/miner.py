@@ -1,26 +1,32 @@
 """ Module responsible with mining games from Opendota """
 
 import json
-import urllib2
-import time
-import ssl
 import logging
 import pandas as pd
+import ssl
+import time
+import urllib2
+
 from pandas.io.json import json_normalize
+from metadata import get_last_patch
 
 
 OPENDOTA_URL = "https://api.opendota.com/api/publicMatches?less_than_match_id="
 REQUEST_TIMEOUT = 0.3
-COLUMNS = ['match_id', 'radiant_win', 'radiant_team', 'dire_team', 'avg_mmr', 'num_mmr', \
-    'game_mode', 'lobby_type']
+COLUMNS = ['match_id', 'radiant_win', 'radiant_team', 'dire_team', 'avg_mmr', 'num_mmr',
+           'game_mode', 'lobby_type']
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+last_patch_dict = get_last_patch()
+first_match = last_patch_dict['first_match_id']
+last_match = last_patch_dict['last_match_id']
+
 
 def mine_data(file_name=None,
-              first_match_id=3293000000,
-              last_match_id=3306144409,
+              first_match_id=first_match,
+              last_match_id=last_match,
               stop_at=None,
               timeout=15,
               save_every=1000):
@@ -49,7 +55,7 @@ def mine_data(file_name=None,
     current_match_id = last_match_id
     games_remaining = stop_at
 
-    while(current_match_id > first_match_id):
+    while current_match_id > first_match_id:
         try:
             current_link = OPENDOTA_URL + str(current_match_id)
             logger.info("Mining chunk starting at match ID %d", current_match_id)
@@ -70,7 +76,9 @@ def mine_data(file_name=None,
             continue
 
         current_match_id = last_match_id
-        games_remaining -= len(response_json)
+
+        if games_remaining:
+            games_remaining -= len(response_json)
 
         current_dataframe = json_normalize(response_json)
 
@@ -83,10 +91,10 @@ def mine_data(file_name=None,
 
         if len(results_dataframe) > current_chunk * save_every:
             current_chunk += 1
-            logger.info("Saving to csv. Total of games mined: %d", len(results_dataframe))
 
             if file_name:
                 pd.DataFrame(results_dataframe, columns=COLUMNS).to_csv(file_name, index=False)
+                logger.info("Saving to csv. Total of games mined: %d", len(results_dataframe))
 
                 if stop_at:
                     if len(results_dataframe) > stop_at:

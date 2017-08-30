@@ -1,0 +1,690 @@
+{
+    "heroes": [
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Anti-Mage", 
+            "id": 1
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Axe", 
+            "id": 2
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Bane", 
+            "id": 3
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Bloodseeker", 
+            "id": 4
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Crystal Maiden", 
+            "id": 5
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Drow Ranger", 
+            "id": 6
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Earthshaker", 
+            "id": 7
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Juggernaut", 
+            "id": 8
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Mirana", 
+            "id": 9
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Morphling", 
+            "id": 10
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Shadow Fiend", 
+            "id": 11
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Phantom Lancer", 
+            "id": 12
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Puck", 
+            "id": 13
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Pudge", 
+            "id": 14
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Razor", 
+            "id": 15
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Sand King", 
+            "id": 16
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Storm Spirit", 
+            "id": 17
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Sven", 
+            "id": 18
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Tiny", 
+            "id": 19
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Vengeful Spirit", 
+            "id": 20
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Windranger", 
+            "id": 21
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Zeus", 
+            "id": 22
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Kunkka", 
+            "id": 23
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Lina", 
+            "id": 25
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Lion", 
+            "id": 26
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Shadow Shaman", 
+            "id": 27
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Slardar", 
+            "id": 28
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Tidehunter", 
+            "id": 29
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Witch Doctor", 
+            "id": 30
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Lich", 
+            "id": 31
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Riki", 
+            "id": 32
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Enigma", 
+            "id": 33
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Tinker", 
+            "id": 34
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Sniper", 
+            "id": 35
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Necrophos", 
+            "id": 36
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Warlock", 
+            "id": 37
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Beastmaster", 
+            "id": 38
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Queen of Pain", 
+            "id": 39
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Venomancer", 
+            "id": 40
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Faceless Void", 
+            "id": 41
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Wraith King", 
+            "id": 42
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Death Prophet", 
+            "id": 43
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Phantom Assassin", 
+            "id": 44
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Pugna", 
+            "id": 45
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Templar Assassin", 
+            "id": 46
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Viper", 
+            "id": 47
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Luna", 
+            "id": 48
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Dragon Knight", 
+            "id": 49
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Dazzle", 
+            "id": 50
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Clockwerk", 
+            "id": 51
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Leshrac", 
+            "id": 52
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Nature's Prophet", 
+            "id": 53
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Lifestealer", 
+            "id": 54
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Dark Seer", 
+            "id": 55
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Clinkz", 
+            "id": 56
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Omniknight", 
+            "id": 57
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Enchantress", 
+            "id": 58
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Huskar", 
+            "id": 59
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Night Stalker", 
+            "id": 60
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Broodmother", 
+            "id": 61
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Bounty Hunter", 
+            "id": 62
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Weaver", 
+            "id": 63
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Jakiro", 
+            "id": 64
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Batrider", 
+            "id": 65
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Chen", 
+            "id": 66
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Spectre", 
+            "id": 67
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Ancient Apparition", 
+            "id": 68
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Doom", 
+            "id": 69
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Ursa", 
+            "id": 70
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Spirit Breaker", 
+            "id": 71
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Gyrocopter", 
+            "id": 72
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Alchemist", 
+            "id": 73
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Invoker", 
+            "id": 74
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Silencer", 
+            "id": 75
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Outworld Devourer", 
+            "id": 76
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Lycan", 
+            "id": 77
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Brewmaster", 
+            "id": 78
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Shadow Demon", 
+            "id": 79
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Lone Druid", 
+            "id": 80
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Chaos Knight", 
+            "id": 81
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Meepo", 
+            "id": 82
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Treant", 
+            "id": 83
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Ogre Magi", 
+            "id": 84
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Undying", 
+            "id": 85
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Rubick", 
+            "id": 86
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Disruptor", 
+            "id": 87
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Nyx Assassin", 
+            "id": 88
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Naga Siren", 
+            "id": 89
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Keeper of the Light", 
+            "id": 90
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Wisp", 
+            "id": 91
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Visage", 
+            "id": 92
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Slark", 
+            "id": 93
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Medusa", 
+            "id": 94
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Troll Warlord", 
+            "id": 95
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Centaur Warrunner", 
+            "id": 96
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Magnus", 
+            "id": 97
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Timbersaw", 
+            "id": 98
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Bristleback", 
+            "id": 99
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Tusk", 
+            "id": 100
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Skywrath Mage", 
+            "id": 101
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Dire", 
+            "name": "Abaddon", 
+            "id": 102
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Elder Titan", 
+            "id": 103
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Legion Commander", 
+            "id": 104
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Techies", 
+            "id": 105
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Ember Spirit", 
+            "id": 106
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Earth Spirit", 
+            "id": 107
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Underlord", 
+            "id": 108
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Terrorblade", 
+            "id": 109
+        }, 
+        {
+            "primary_attribute": "Strength", 
+            "faction": "Radiant", 
+            "name": "Phoenix", 
+            "id": 110
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Radiant", 
+            "name": "Oracle", 
+            "id": 111
+        }, 
+        {
+            "primary_attribute": "Intelligence", 
+            "faction": "Dire", 
+            "name": "Winter Wyvern", 
+            "id": 112
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Dire", 
+            "name": "Arc Warden", 
+            "id": 113
+        }, 
+        {
+            "primary_attribute": "Agility", 
+            "faction": "Radiant", 
+            "name": "Monkey King", 
+            "id": 114
+        }
+    ], 
+    "patches": [
+        {
+            "heroes_released": 114, 
+            "patch_name": "7.06e", 
+            "first_match_id": 3293000000, 
+            "last_match_id": 3306144409
+        }
+    ]
+}

@@ -20,7 +20,7 @@ def get_hero_id(localized_name):
 
 def get_full_hero_list():
 	global heroes_json_data
-	json_data = json.load(open(os.path.join('preprocessing', 'heroes.json'), "rt"))
+	json_data = json.load(open(os.path.join('preprocessing', 'static_data.json'), "rt"))
 
 	hero_list = []
 	heroes_json_data = json_data["heroes"]

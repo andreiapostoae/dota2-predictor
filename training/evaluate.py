@@ -13,10 +13,10 @@ from sklearn.linear_model import LogisticRegression
 def get_hero_names(path=''):
 	""" Returns a map of (index_hero, hero_name)
 
-	path -- relative path to heroes.json
+	path -- relative path to static_data.json
 	"""
 
-	with open(os.path.join(path, 'preprocessing', 'heroes.json')) as data_file:
+	with open(os.path.join(path, 'preprocessing', 'static_data.json')) as data_file:
 		data = json.load(data_file)
 
 	result = data["heroes"]
