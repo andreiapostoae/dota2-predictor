@@ -61,9 +61,12 @@ def read_dataset(csv_path,
 
     if advantages:
         logger.info("Computing advantages...")
-        advantages_list = compute_advantages(dataset_df, 'test.csv')
+        advantages_list = compute_advantages(dataset_df)
     else:
-        advantages_list = None
+        logger.info("Loading advantages from files...")
+        synergies = np.loadtxt('synergies_all.csv')
+        counters = np.loadtxt('counters_all.csv')
+        advantages_list = [synergies, counters]
 
     logger.info("Transforming dataframe in feature map...")
     feature_map = _dataset_to_features(dataset_df, advantages=advantages_list)

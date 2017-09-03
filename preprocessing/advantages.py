@@ -43,13 +43,15 @@ def _compute_winrates(synergy, counter, heroes_released):
 
 
 def _adv_synergy(winrate_together, winrate_hero1, winrate_hero2):
-    return ((winrate_together - winrate_hero1) / winrate_hero1) + \
-           ((winrate_together - winrate_hero2) / winrate_hero2)
+    # return ((winrate_together - winrate_hero1) / winrate_hero1) + \
+    #        ((winrate_together - winrate_hero2) / winrate_hero2)
+    return winrate_together
 
 
 def _adv_counter(winrate_together, winrate_hero1, winrate_hero2):
-    return ((winrate_together - winrate_hero1) / winrate_hero1) - \
-           ((1 - winrate_together - winrate_hero2) / winrate_hero2)
+    # return ((winrate_together - winrate_hero1) / winrate_hero1) - \
+    #        ((1 - winrate_together - winrate_hero2) / winrate_hero2)
+    return winrate_together
 
 
 def _calculate_advantages(synergy, counter, heroes_released):
@@ -89,7 +91,7 @@ def load_advantages(file_name):
     return [synergy_matrix, counter_matrix]
 
 
-def compute_advantages(dataset_df, save_to_file=None):
+def compute_advantages(dataset_df):
     last_patch_info = get_last_patch()
     heroes_released = last_patch_info['heroes_released']
 
@@ -112,8 +114,7 @@ def compute_advantages(dataset_df, save_to_file=None):
 
     synergy_matrix, counter_matrix = _calculate_advantages(synergy, counter, heroes_released)
 
-    if save_to_file:
-        np.savetxt("synergy_" + save_to_file, synergy_matrix)
-        np.savetxt("counter_" + save_to_file, counter_matrix)
+    np.savetxt('synergies_all.csv', synergy_matrix)
+    np.savetxt('counters_all.csv', counter_matrix)
 
     return [synergy_matrix, counter_matrix]
