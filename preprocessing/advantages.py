@@ -84,13 +84,6 @@ def _calculate_advantages(synergy, counter, heroes_released):
     return synergies, counters
 
 
-def load_advantages(file_name):
-    synergy_matrix = np.loadtxt('synergy_' + file_name)
-    counter_matrix = np.loadtxt('counter_' + file_name)
-
-    return [synergy_matrix, counter_matrix]
-
-
 def compute_advantages(dataset_df):
     last_patch_info = get_last_patch()
     heroes_released = last_patch_info['heroes_released']
@@ -114,7 +107,7 @@ def compute_advantages(dataset_df):
 
     synergy_matrix, counter_matrix = _calculate_advantages(synergy, counter, heroes_released)
 
-    np.savetxt('synergies_all.csv', synergy_matrix)
-    np.savetxt('counters_all.csv', counter_matrix)
+    np.savetxt('pretrained/synergies_all.csv', synergy_matrix)
+    np.savetxt('pretrained/counters_all.csv', counter_matrix)
 
     return [synergy_matrix, counter_matrix]

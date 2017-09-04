@@ -10,16 +10,15 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def evaluate(train_data, test_data, cv=5, scale=True, save_model=None):
+def evaluate(train_data, test_data, cv=5, save_model=None):
     x_train, y_train = train_data
     x_test, y_test = test_data
 
-    if scale:
-        scaler = StandardScaler()
-        scaler.fit(x_train)
+    scaler = StandardScaler()
+    scaler.fit(x_train)
 
-        x_train = scaler.transform(x_train)
-        x_test = scaler.transform(x_test)
+    x_train = scaler.transform(x_train)
+    x_test = scaler.transform(x_test)
 
     if cv > 0:
         model = LogisticRegression(C=0.005, random_state=42)
@@ -35,7 +34,11 @@ def evaluate(train_data, test_data, cv=5, scale=True, save_model=None):
     accuracy = roc_auc_score(y_test, probabilities[:, 1])
 
     if save_model:
-        joblib.dump(model, save_model)
+        model_dict = {}
+        model_dict['scaler'] = scaler
+        model_dict['model'] = model
+
+        joblib.dump(model_dict, save_model)
 
     logger.info("Test accuracy: %.3f", accuracy)
 
