@@ -1,6 +1,3 @@
-from tools.metadata import get_last_patch
-# from joblib import Parallel, delayed
-import multiprocessing
 import numpy as np
 
 
