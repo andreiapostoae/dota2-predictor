@@ -36,17 +36,15 @@ def pretrain():
 
 def main():
 
-    # synergies = np.loadtxt('pretrained/synergies_all.csv')
-    # counters = np.loadtxt('pretrained/counters_all.csv')
-    # similarities = np.loadtxt('pretrained/similarities_all.csv')
-    #
-    # start_time = time.time()
-    # query(3011, [59, 56, 54, 48, 34], [40, 41, 52, 68], synergies, counters, similarities)
-    # end_time = time.time()
-    #
-    # print (end_time - start_time) * 1000, 'ms'
+    synergies = np.loadtxt('pretrained/synergies_all.csv')
+    counters = np.loadtxt('pretrained/counters_all.csv')
+    similarities = np.loadtxt('pretrained/similarities_all.csv')
 
-    pretrain()
+    start_time = time.time()
+    query(3011, [59, 56, 54, 48, 34], [40, 41, 52, 68], synergies, counters, similarities)
+    end_time = time.time()
+
+    print (end_time - start_time) * 1000, 'ms'
 
 
 if __name__ == '__main__':

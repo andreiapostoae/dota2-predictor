@@ -5,28 +5,41 @@ import numpy as np
 from tools.metadata import get_hero_dict
 from preprocessing.augmenter import augment_with_advantages
 import operator
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def query(mmr, radiant_heroes, dire_heroes, synergies, counters, similarities):
-    file_list = [int(valid_file[:4]) for valid_file in listdir('pretrained')
-                 if '.pkl' in valid_file]
+    if mmr < 0 or mmr > 10000:
+        logger.error("MMR should be a number between 0 and 10000")
+        return
 
-    file_list.sort()
+    if mmr < 2000:
+        model_dict = joblib.load(os.path.join("pretrained", "2000-.pkl"))
+        logger.info("Using 0-2000 MMR model")
+    elif mmr > 5000:
+        model_dict = joblib.load(os.path.join("pretrained", "5000+.pkl"))
+        logger.info("Using 5000-10000 MMR model")
+    else:
+        file_list = [int(valid_file[:4]) for valid_file in listdir('pretrained')
+                     if '.pkl' in valid_file]
 
-    min_distance = 10000
-    final_mmr = -1000
+        file_list.sort()
 
-    for model_mmr in file_list:
-        if abs(mmr - model_mmr) < min_distance:
-            min_distance = abs(mmr - model_mmr)
-            final_mmr = model_mmr
+        min_distance = 10000
+        final_mmr = -1000
 
-    if final_mmr == -1000 or mmr < 0 or mmr > 10000:
-        print "Please use a MMR between 0 and 10000."
+        for model_mmr in file_list:
+            if abs(mmr - model_mmr) < min_distance:
+                min_distance = abs(mmr - model_mmr)
+                final_mmr = model_mmr
 
-    print "Using closest model available: %d MMR" % final_mmr
+        print "Using closest model available: %d MMR model" % final_mmr
 
-    model_dict = joblib.load(os.path.join("pretrained", str(final_mmr) + ".pkl"))
+        model_dict = joblib.load(os.path.join("pretrained", str(final_mmr) + ".pkl"))
+
     scaler = model_dict['scaler']
     model = model_dict['model']
 
@@ -42,7 +55,10 @@ def query(mmr, radiant_heroes, dire_heroes, synergies, counters, similarities):
         features_reshaped = features.reshape(1, -1)
         features_final = scaler.transform(features_reshaped)
 
-        print "Radiant has %.3f%% chance" % (model.predict_proba(features_final)[:, 0] * 100)
+        probability = model.predict_proba(features_final)[:, 1] * 100
+
+        logger.info("Radiant chance to win: %.3f%%", probability)
+        logger.info("Dire chance to win: %.3f%%", (100 - probability))
 
     else:
         all_heroes = radiant_heroes + dire_heroes
