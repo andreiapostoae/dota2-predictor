@@ -36,7 +36,7 @@ def query(mmr, radiant_heroes, dire_heroes, synergies, counters, similarities):
                 min_distance = abs(mmr - model_mmr)
                 final_mmr = model_mmr
 
-        print "Using closest model available: %d MMR model" % final_mmr
+        logger.info("Using closest model available: %d MMR model", final_mmr)
 
         model_dict = joblib.load(os.path.join("pretrained", str(final_mmr) + ".pkl"))
 
@@ -57,8 +57,10 @@ def query(mmr, radiant_heroes, dire_heroes, synergies, counters, similarities):
 
         probability = model.predict_proba(features_final)[:, 1] * 100
 
-        logger.info("Radiant chance to win: %.3f%%", probability)
-        logger.info("Dire chance to win: %.3f%%", (100 - probability))
+        if probability > 50:
+            return "Radiant has %.3f%% chance" % probability
+        else:
+            return "Dire has %.3f%% chance" % (100 - probability)
 
     else:
         all_heroes = radiant_heroes + dire_heroes
@@ -124,7 +126,9 @@ def query(mmr, radiant_heroes, dire_heroes, synergies, counters, similarities):
 
         max_similarity_allowed = similarities_list[len(similarities_list) / 4]
 
-        new_list = [x for x in results_list if x[1][1] < max_similarity_allowed]
+        filtered_list = [x for x in results_list if x[1][1] < max_similarity_allowed]
 
-        for element in new_list:
+        for element in filtered_list:
             print element
+
+        return filtered_list
