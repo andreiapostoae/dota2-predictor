@@ -7,8 +7,8 @@ import ssl
 import time
 import urllib2
 
-from pandas.io.json import json_normalize
 from metadata import get_last_patch
+from pandas.io.json import json_normalize
 
 
 OPENDOTA_URL = "https://api.opendota.com/api/publicMatches?less_than_match_id="

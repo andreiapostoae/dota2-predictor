@@ -10,7 +10,7 @@ def pretrain():
     # with open('pretrained/results.csv', 'w+') as results_file:
     #     results_file.write('mmr,train_size,test_size,roc_auc\n')
 
-    for i in range(31):
+    for i in range(1):
         if i < 20:
             offset = 200
         elif i < 25:
@@ -41,7 +41,7 @@ def main():
     similarities = np.loadtxt('pretrained/similarities_all.csv')
 
     start_time = time.time()
-    query(3011, [59, 56, 54, 48, 34], [40, 41, 52, 68], synergies, counters, similarities)
+    print query(3500, [59, 56, 54, 48, 34], [40, 41, 52, 68, 29], synergies, counters, similarities)
     end_time = time.time()
 
     print (end_time - start_time) * 1000, 'ms'
