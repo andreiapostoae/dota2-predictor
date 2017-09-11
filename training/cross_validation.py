@@ -1,16 +1,30 @@
+""" Module responsible with training, evaluating and cross validation of data """
+import logging
+import numpy as np
+
+from sklearn.externals import joblib
+from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score
-from sklearn.externals import joblib
-import logging
-import numpy as np
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 def evaluate(train_data, test_data, cv=5, save_model=None):
+    """ Given train data, performs cross validation using cv folds, then calculates the score on
+    test data. The metric used is roc_auc_score from sklearn. Before training, the data is
+    normalized and the scaler used is saved for scaling the test data in the same manner.
+
+    Args:
+        train_data: list containing x_train and y_train
+        test_data: list containing x_test and y_test
+        cv: number of folds to use in cross validation
+        save_model: if given, the model is saved to this path
+    Returns:
+        train size, test size, roc_auc score
+    """
     x_train, y_train = train_data
     x_test, y_test = test_data
 

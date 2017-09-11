@@ -1,7 +1,18 @@
+""" Module responsible with data augmentation """
 import numpy as np
 
 
 def augment_with_advantages(synergy, counter, radiant_heroes, dire_heroes):
+    """ Computes a numpy array containing the features that have to be appended to a game
+    Args:
+        synergy: synergy matrix
+        counter: counter matrix
+        radiant_heroes: list of radiant heroes IDs
+        dire_heroes: list of dire heroes IDs
+    Returns:
+        np.array containing synergy of radiant team, synergy of dire team and counter score of
+        radiant against dire
+    """
     synergy_radiant = 0
     synergy_dire = 0
     counter_score = 0

@@ -1,15 +1,27 @@
-import pandas as pd
-import numpy as np
 import logging
+import numpy as np
+import pandas as pd
+
 from advantages import compute_advantages
-from tools.metadata import get_last_patch
 from augmenter import augment_with_advantages
+from tools.metadata import get_last_patch
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 def _dataset_to_features(dataset_df, advantages=None):
+    """ Transforms a mined pandas DataFrame into a feature matrix. This method assumes the following
+    format of a DataFrame:
+    columns: [match_id,radiant_win,radiant_team,dire_team,avg_mmr,num_mmr,game_mode,lobby_type]
+
+    Args:
+        dataset_df: pandas DataFrame to be transformed
+        advantages: if given, the synergy and counters matrix are used to compute synergy and
+            counter rating for every game which are appended to the feature matrix
+    Returns:
+        [X, y], where X is feature matrix, y are outputs
+    """
     last_patch_info = get_last_patch()
     heroes_released = last_patch_info['heroes_released']
     synergy_matrix, counter_matrix = None, None
@@ -48,6 +60,18 @@ def read_dataset(csv_path,
                  low_mmr=None,
                  high_mmr=None,
                  advantages=False):
+    """ Reads pandas DataFrame from csv_path, filters games between low_mmr and high_mmr if given
+    and appends synergy and counter features
+
+    Args:
+        csv_path: path to read pandas DataFrame from
+        low_mmr: lower MMR bound
+        high_mmr: higher MMR bound
+        advantages: if True, advantages are recalculated and saved to files, else it is read from
+            they are read from files
+    Returns:
+        [feature_matrix, [synergy_matrix, counter_matrix]]
+    """
     global logger
     dataset_df = pd.read_csv(csv_path)
 
