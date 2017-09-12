@@ -1,0 +1,116 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="/static/css/material-kit.css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/static/js/material.min.js"></script>
+<script src="/static/js/material-kit.js"></script>
+<script src="/static/js/auto-complete.min.js"></script>
+<link rel="stylesheet" href="/static/css/auto-complete.css">
+<script src="https://use.fontawesome.com/8ddf1c3d3f.js"></script>
+<link rel="stylesheet" href="/static/css/main.css">
+
+
+<head>
+<title>Dota 2 Predictor</title>
+</head>
+<body>
+<div class="row" id="selected-heroes">
+  <div class="col-sm-6" id="radiant-heroes">
+    <br>
+    <h1>
+      Radiant Team
+    </h1>
+  </div>
+
+  <div class="col-sm-6" id="dire-heroes">
+    <br>
+    <h1>
+      Dire Team
+    </h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-4 col-sm-offset-4">
+		<div class="input-group">
+			<div class="form-group is-empty">
+        <input name="hero-search" id="hero-search" type="text" class="form-control" placeholder="Search for a hero">
+        <span class="material-input"></span>
+      </div>
+      <span class="input-group-addon">
+				<i onclick="search_clear()" class="fa fa-2 fa-times-circle" aria-hidden="true"></i>
+			</span>
+    </div>
+	</div>
+</div>
+<br><br>
+<br><br><br>
+<div class="row main main-raised" id="rad-hero-grid">
+  <div class="col-sm-4" id="rad-str-heroes">
+  </div>
+
+  <div class="col-sm-4" id="rad-agi-heroes">
+  </div>
+
+  <div class="col-sm-4" id="rad-int-heroes">
+  </div>
+</div>
+<br>
+<div class="row main main-raised" id="dire-hero-grid">
+  <div class="col-sm-4" id="dire-str-heroes">
+  </div>
+  <div class="col-sm-4" id="dire-agi-heroes">
+  </div>
+  <div class="col-sm-4" id="dire-int-heroes">
+  </div>
+</div>
+
+<br>
+
+<div class="row">
+  <div class="col-sm-2 col-sm-offset-5">
+    <input id="mmr"  placeholder="Average MMR" type="text" class="form-control"></input>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col-sm-3 col-sm-offset-3">
+    <button id="predict_button" rel="tooltip" title="For predicting the winner, select all the heroes in the game." data-placement="top" class="disabled btn-default btn-round btn-md btn submit-btn">Predict winner</button>
+  </div>
+  <div class="col-sm-3">
+    <button id="suggest_button" rel="tooltip" title="For getting last pick suggestions, select the other 9 heroes" data-placement="top" class="disabled btn-default btn-round btn-md btn submit-btn">Suggest hero</button>
+  </div>
+</div>
+<br>
+<br>
+<div class="modal fade" id="data-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button btn-sm btn-danger" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="modal-label"></h4>
+      </div>
+      <div class="modal-body">
+        <p id="text_area">
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success btn-md" data-dismiss="modal">OK!</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+
+  </div>
+</div>
+</body>
+
+<script>
+
+  radiant_heroes = {{radiant_heroes|safe}};
+  dire_heroes = {{dire_heroes|safe}};
+
+</script>
+<script src="/static/js/main.js"></script>

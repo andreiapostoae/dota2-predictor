@@ -1,0 +1,170 @@
+no_mmr = true;
+unique_heroes = []
+
+function new_check(){
+  empty_string_check();
+  if(!isNaN($("#mmr").val()) && $("#mmr").val() > 0 && $("#mmr").val() < 10000){
+    no_mmr = false;
+  }
+  else{
+    no_mmr = true;
+  }
+
+
+  if($("#selected-heroes").find(".hero").length == 9 && !no_mmr){
+    $("#predict_button").addClass("disabled");
+    $("#suggest_button").removeClass("disabled");
+  }
+  else if($("#selected-heroes").find(".hero").length == 10 && !no_mmr){
+    $("#predict_button").removeClass("disabled");
+    $("#suggest_button").addClass("disabled");
+  }
+  else{
+    $("#predict_button").addClass("disabled");
+    $("#suggest_button").addClass("disabled");
+  }
+}
+
+$('input').keypress(function () {
+  if(!isNaN($(this).val()) && $(this).val() > 0 && $(this).val() < 10000){
+    no_mmr = false;
+  }
+  else{
+    no_mmr = true;
+  }
+  new_check();
+});
+
+function empty_string_check(){
+  for(var i = 0; i < unique_heroes.length; i++){
+    if(!(unique_heroes[i].length)){
+      unique_heroes.splice(i, 1);
+    }
+  }
+}
+function send_data(){
+  if($("#selected-heroes").find(".hero").length == 10 && unique_heroes.length > 10){
+    empty_string_check();
+  }
+  if($("#radiant-heroes").children().length == 4){
+    unique_heroes.splice(4, 0, '');
+  }
+  else if($("#dire-heroes").children().length == 4){
+    unique_heroes.splice(9, 0, '');
+  }
+  else{}
+  data = {}
+  data['mmr'] = $("#mmr").val();
+  data['heroes'] = unique_heroes;
+  //data['heroes'] = heroes;
+  //console.log(data);
+  $.ajax({
+		type : "POST",
+		data: JSON.stringify(data, null, '\t'),
+		contentType: 'application/json;charset=UTF-8',
+    success: function(text) {
+      $("#text_area").html(text);
+    }
+	});
+}
+
+$(document).on("click", ".added-hero", function(e){
+  name = $(this).attr('name');
+  //console.log(name);
+  name = name.replace('.', '\'');
+  edited_name = name.replace(/ /g, '_').replace("\'", '').toLowerCase();
+  var pos = $(this).position();
+  //The following are the x/y coordinates of the mouse click relative to image.
+  var x = e.pageX - pos.left;
+  var y = e.pageY - pos.top;
+  var width = $(this).width();
+  var height = $(this).height();
+  //30degree angle
+  click_location = x - $(this).offset()['left']
+  //console.log(click_location, $(this).width());
+
+
+  if( $("#selected-heroes").find(".hero").length == 10){
+  }
+  else if(click_location >= ($(this).width()/2) && !hero_exist_check(edited_name) && $("#dire-heroes").children().length < 5 || $("#radiant-heroes").children().length == 5 && !hero_exist_check(edited_name) && $("#dire-heroes").children().length < 5 ){
+    unique_heroes.splice($("#selected-heroes").find(".hero").length, 0, name);
+    if($("#dire-heroes").children().length == 0){
+      $("#dire-heroes").append("<div class='col-xs-2 col-xs-offset-1  dire-hero hero' style='padding:0px' ><img id='dire-"+edited_name+"' src='/static/images/"+edited_name+"_full.png'></div>")
+    }
+    else{
+      $("#dire-heroes").append("<div class='col-xs-2  dire-hero hero' style='padding:0px' ><img id='dire-"+edited_name+"' src='/static/images/"+edited_name+"_full.png'></div>")
+    }
+  }
+  else if($("#radiant-heroes").children().length < 5 && !hero_exist_check(edited_name)){
+    unique_heroes.splice($("#selected-heroes").find(".radiant-hero").length, 0, name);
+    if($("#radiant-heroes").children().length == 0){
+      $("#radiant-heroes").append("<div class='col-xs-2 col-xs-offset-1  radiant-hero hero' style='padding:0px' ><img id='radiant-"+edited_name+"' src='/static/images/"+edited_name+"_full.png'></div>")
+    }
+
+    else {
+      $("#radiant-heroes").append("<div class='col-xs-2  radiant-hero hero' style='padding:0px' ><img id='radiant-"+edited_name+"' src='/static/images/"+edited_name+"_full.png'></div>")
+    }
+  }
+  else{
+  }
+  new_check();
+});
+
+function hero_add(name, e){
+  //console.log($(this));
+  name = name.replace('.', '\'');
+  edited_name = name.replace(/ /g, '_').replace("\'", '').toLowerCase();
+  var pos = $(this).position();
+  //The following are the x/y coordinates of the mouse click relative to image.
+  var x = e.pageX - pos.left;
+  var y = e.pageY - pos.top;
+  click_location = x - $(this).offset()['left']
+  //console.log(click_location);
+
+  if( $("#selected-heroes").find(".hero").length == 10){
+  }
+  else if(click_location >= $(this).width()/2 && $("#radiant-heroes").children().length == 5 && !hero_exist_check(edited_name)){
+    unique_heroes.splice($("#selected-heroes").find(".hero").length, 0, name);
+    if($("#dire-heroes").children().length == 0){
+      //$("#dire-heroes").append("<div class='col-xs-2 col-xs-offset-1  dire-hero hero' style='padding:0px' ><img id='dire-"+edited_name+"' src='/static/images/"+edited_name+"_full.png'></div>")
+    }
+    else{
+      //$("#dire-heroes").append("<div class='col-xs-2  dire-hero hero' style='padding:0px' ><img id='dire-"+edited_name+"' src='/static/images/"+edited_name+"_full.png'></div>")
+    }
+  }
+  else if($("#radiant-heroes").children().length < 5 && !hero_exist_check(edited_name)){
+    unique_heroes.splice($("#selected-heroes").find(".radiant-hero").length, 0, name);
+    if($("#radiant-heroes").children().length == 0){
+      //$("#radiant-heroes").append("<div class='col-xs-2 col-xs-offset-1  radiant-hero hero' style='padding:0px' ><img id='radiant-"+edited_name+"' src='/static/images/"+edited_name+"_full.png'></div>")
+    }
+    else{
+      //$("#radiant-heroes").append("<div class='col-xs-2  radiant-hero hero' style='padding:0px' ><img id='radiant-"+edited_name+"' src='/static/images/"+edited_name+"_full.png'></div>")
+    }
+  }
+  else{
+  }
+  new_check();
+}
+
+
+
+function hero_exist_check(edited_name){
+  //console.log(edited_name);
+  return $("#dire-"+edited_name).length + $("#radiant-"+edited_name).length
+}
+
+
+
+$(document).on("click", ".hero", function(e){
+
+  if($(this).children().attr('id').indexOf("radiant") != -1){
+    unique_heroes.splice($(this).index(), 1);
+  }
+  else{
+    unique_heroes.splice($(this).index()+$(this).siblings().length, 1);
+  }
+
+  //console.log(unique_heroes);
+  $(this).remove();
+  new_check();
+});
