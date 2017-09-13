@@ -88,12 +88,12 @@ def _query_missing(model,
                 similarity_new = base_similarity_radiant
                 for j in range(4):
                     similarity_new += similarities[i + 1][radiant_heroes[j]]
-                    similarities_list.append(similarity_new)
+                similarities_list.append(similarity_new)
             else:
                 similarity_new = base_similarity_dire
                 for j in range(4):
                     similarity_new += similarities[i + 1][dire_heroes[j]]
-                    similarities_list.append(similarity_new)
+                similarities_list.append(similarity_new)
 
             results_dict[heroes_dict[i + 1]] = (prob, similarity_new)
 
