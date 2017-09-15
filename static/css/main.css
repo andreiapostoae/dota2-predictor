@@ -189,3 +189,14 @@ input{
 .main-raised{
   margin: 0px;
 }
+
+/*Hope to fix modal moving everything to the left...*/
+body.modal
+{
+    margin-right: 0!important;
+    overflow: hidden;
+}
+.modal-open-noscroll .navbar-fixed-top, .modal-open .navbar-fixed-bottom
+{
+    margin-right: 0!important;
+}

@@ -14,17 +14,18 @@ def home():
         similarities = np.loadtxt('pretrained/similarities_all.csv')
 
         heroes = [name.encode('UTF8') for name in request.json['heroes']]
-        hero_ids = [get_hero_id(hero)for hero in heroes]
-        for i, hero in enumerate(hero_ids):
-             if not hero:
-                del hero_ids[i]
+
+        print(heroes)
+        radiant = [get_hero_id(hero) for hero in heroes[:5] if get_hero_id(hero)]
+        dire = [get_hero_id(hero) for hero in heroes[5:] if get_hero_id(hero)]
+
 
         #text = query(request.json['mmr'], heroes)
         mmr = int(request.json['mmr'])
         #print(mmr, hero_ids[:5], hero_ids[5:])
-        radiant = hero_ids[:5]
-        dire = hero_ids[5:]
 
+
+        print(radiant, dire)
         text = query(mmr, radiant, dire, synergies, counters, similarities)
         #print text
         if isinstance(text, list):
