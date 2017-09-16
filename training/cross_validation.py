@@ -3,7 +3,7 @@ import logging
 import numpy as np
 
 from sklearn.externals import joblib
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, accuracy_score
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -34,18 +34,25 @@ def evaluate(train_data, test_data, cv=5, save_model=None):
     x_train = scaler.transform(x_train)
     x_test = scaler.transform(x_test)
 
+    cross_val_mean = -1
     if cv > 0:
         model = LogisticRegression(C=0.005, random_state=42)
-        cross_val_scores = cross_val_score(model, x_train, y_train, cv=cv, scoring='roc_auc')
+        cross_val_scores = cross_val_score(model, x_train, y_train, cv=cv, scoring='roc_auc',
+                                           n_jobs=-1)
+
+        cross_val_mean = np.mean(cross_val_scores)
         logger.info("Cross validation scores over the training set (%d folds): %.3f +/- %.3f", cv,
-                    np.mean(cross_val_scores),
+                    cross_val_mean,
                     np.std(cross_val_scores))
 
     model = LogisticRegression(C=0.005, random_state=42)
     model.fit(x_train, y_train)
 
     probabilities = model.predict_proba(x_test)
-    accuracy = roc_auc_score(y_test, probabilities[:, 1])
+    roc_auc = roc_auc_score(y_test, probabilities[:, 1])
+
+    labels = model.predict(x_test)
+    acc_score = accuracy_score(y_test, labels)
 
     if save_model:
         model_dict = {}
@@ -54,6 +61,7 @@ def evaluate(train_data, test_data, cv=5, save_model=None):
 
         joblib.dump(model_dict, save_model)
 
-    logger.info("Test accuracy: %.3f", accuracy)
+    logger.info("Test ROC AUC: %.3f", roc_auc)
+    logger.info("Test accuracy score: %.3f", acc_score)
 
-    return (x_train.shape[0], x_test.shape[0], accuracy)
+    return (x_train.shape[0], x_test.shape[0], cross_val_mean, roc_auc, acc_score)

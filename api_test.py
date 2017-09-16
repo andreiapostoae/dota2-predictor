@@ -1,10 +1,10 @@
 from sklearn.externals import joblib
 from preprocessing.dataset import read_dataset
 from training.cross_validation import evaluate
+from visualizing.learning_curve import plot_learning_curve
 from training.query import query
 import numpy as np
 import time
-
 
 def pretrain():
     # with open('pretrained/results.csv', 'w+') as results_file:
@@ -36,16 +36,21 @@ def pretrain():
 
 def main():
 
-    synergies = np.loadtxt('pretrained/synergies_all.csv')
-    counters = np.loadtxt('pretrained/counters_all.csv')
-    similarities = np.loadtxt('pretrained/similarities_all.csv')
+    # synergies = np.loadtxt('pretrained/synergies_all.csv')
+    # counters = np.loadtxt('pretrained/counters_all.csv')
+    # similarities = np.loadtxt('pretrained/similarities_all.csv')
+    #
+    # start_time = time.time()
+    # print query(5000, [59, 56, 54, 48, 31], [40, 41, 52, 68, 61], synergies, counters, similarities)
+    # print query(5000, [59, 56, 54, 48, 31], [40, 41, 52, 68], synergies, counters, similarities)
+    # end_time = time.time()
+    #
+    # print (end_time - start_time) * 1000, 'ms'
+    features, _ = read_dataset('706e_train_dataset.csv', low_mmr=3000, high_mmr=3500)
+    plot_learning_curve(features[0], features[1], subsets=20, cv=3, mmr=3250, tool='plotly')
 
-    start_time = time.time()
-    print query(5000, [59, 56, 54, 48, 31], [40, 41, 52, 68, 61], synergies, counters, similarities)
-    print query(5000, [59, 56, 54, 48, 31], [40, 41, 52, 68], synergies, counters, similarities)
-    end_time = time.time()
-
-    print (end_time - start_time) * 1000, 'ms'
+    features, _ = read_dataset('706e_train_dataset.csv', low_mmr=4250, high_mmr=4800)
+    plot_learning_curve(features[0], features[1], subsets=20, cv=3, mmr=4500, tool='plotly')
 
 
 if __name__ == '__main__':
