@@ -75,5 +75,5 @@ def get_hero_id(name):
 if __name__ == '__main__':
     global json_data
     json_data = json.load(open(os.path.join('metadata.json'), "rt"))
-    app.run(debug= True,host="127.0.0.1",port=5000, threaded=True)
-    #app.run(debug=False,host="0.0.0.0",port=5000, threaded=True)
+    #app.run(debug= True,host="127.0.0.1",port=5000, threaded=True)
+    app.run(debug=False,host="0.0.0.0",port=5000, threaded=True)

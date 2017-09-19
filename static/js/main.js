@@ -437,7 +437,7 @@ var my_autoComplete = new autoComplete({
         }
         return `
         <div class="autocomplete-suggestion" data-val="`+item+`">
-          <img style="pointer-events:none;width:25px;height:25px;float:left;" src="/static/images/miniheroes/`+edited_name+`.png">
+          <img style="pointer-events:none;width:25px;height:25px;float:left;" src="/static/images/miniheroes/`+edited_name+`.gif">
           <p style="float:left;padding-left:10px;">  `+item+`</p>
         </div>
           `
