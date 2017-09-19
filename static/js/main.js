@@ -9,19 +9,19 @@ $(window).on("load", function() {
       $("#temp").remove();
       $("#radiant-heroes").append(`
         <div class='col-sm-2 col-sm-offset-1 well hero-well' style='padding:0px;' >
-          <img style="" id='dire-puck' src='/static/images/puck_full.png'>
+          <img style="" id='dire-puck' src='/static/images/puck_full.jpg'>
         </div>
         <div class='col-sm-2  well hero-well' style='padding:0px;' >
-          <img style="" id='dire-puck' src='/static/images/puck_full.png'>
+          <img style="" id='dire-puck' src='/static/images/puck_full.jpg'>
         </div>
         <div class='col-sm-2  well hero-well' style='padding:0px;' >
-          <img style="" id='dire-puck' src='/static/images/puck_full.png'>
+          <img style="" id='dire-puck' src='/static/images/puck_full.jpg'>
         </div>
         <div class='col-sm-2  well hero-well' style='padding:0px;' >
-          <img style="" id='dire-puck' src='/static/images/puck_full.png'>
+          <img style="" id='dire-puck' src='/static/images/puck_full.jpg'>
         </div>
         <div class='col-sm-2  well hero-well' style='padding:0px;' >
-          <img style="" id='dire-puck' src='/static/images/puck_full.png'>
+          <img style="" id='dire-puck' src='/static/images/puck_full.jpg'>
         </div>
       `);
       object = $("#radiant-heroes");
@@ -30,19 +30,19 @@ $(window).on("load", function() {
       object.find('img').remove();
       $("#dire-heroes").append(`
         <div class='col-sm-2 col-sm-offset-1 well hero-well' style='padding:0px;' >
-          <img style="" id='dire-puck' src='/static/images/puck_full.png'>
+          <img style="" id='dire-puck' src='/static/images/puck_full.jpg'>
         </div>
         <div class='col-sm-2  well hero-well' style='padding:0px;' >
-          <img style="" id='dire-puck' src='/static/images/puck_full.png'>
+          <img style="" id='dire-puck' src='/static/images/puck_full.jpg'>
         </div>
         <div class='col-sm-2  well hero-well' style='padding:0px;' >
-          <img style="" id='dire-puck' src='/static/images/puck_full.png'>
+          <img style="" id='dire-puck' src='/static/images/puck_full.jpg'>
         </div>
         <div class='col-sm-2  well hero-well' style='padding:0px;' >
-          <img style="" id='dire-puck' src='/static/images/puck_full.png'>
+          <img style="" id='dire-puck' src='/static/images/puck_full.jpg'>
         </div>
         <div class='col-sm-2  well hero-well' style='padding:0px;' >
-          <img style="" id='dire-puck' src='/static/images/puck_full.png'>
+          <img style="" id='dire-puck' src='/static/images/puck_full.jpg'>
         </div>
       `);
       object = $("#dire-heroes");
@@ -61,7 +61,7 @@ for (var attr in radiant_heroes) {
     edited_hero_2 = hero.replace('\'','.');
     $("#rad-"+attr+"-heroes").append(`
       <div class='col-sm-2 hero-selector'>
-        <img class='grid-hero' id='`+edited_hero+`' src='/static/images/`+edited_hero+`_full.png' name='`+edited_hero_2+`'>
+        <img class='grid-hero' id='`+edited_hero+`' src='/static/images/`+edited_hero+`_full.jpg' name='`+edited_hero_2+`'>
       </div>
     `);
   }
@@ -74,7 +74,7 @@ for (var attr in dire_heroes) {
     edited_hero_2 = hero.replace('\'','.');
     $("#dire-"+attr+"-heroes").append(`
       <div class='col-sm-2 hero-selector'>
-        <img class='grid-hero' id='`+edited_hero+`' src='/static/images/`+edited_hero+`_full.png' name='`+edited_hero_2+`'>
+        <img class='grid-hero' id='`+edited_hero+`' src='/static/images/`+edited_hero+`_full.jpg' name='`+edited_hero_2+`'>
       </div>
     `);
   }
@@ -251,7 +251,7 @@ $(document).on("click", ".grid-hero", function(e){
         $(this).addClass("dire-hero");
         $(this).addClass("hero");
         $(this).append(`
-          <img name='`+name_original+`' id='dire-`+edited_name+`' src='/static/images/`+edited_name+`_full.png'>
+          <img name='`+name_original+`' id='dire-`+edited_name+`' src='/static/images/`+edited_name+`_full.jpg'>
         `);
         return false
       }
@@ -273,7 +273,7 @@ $(document).on("click", ".grid-hero", function(e){
         $(this).addClass("radiant-hero");
         $(this).addClass("hero");
         $(this).append(`
-          <img name='`+name_original+`' id='radiant-`+edited_name+`' src='/static/images/`+edited_name+`_full.png'>
+          <img name='`+name_original+`' id='radiant-`+edited_name+`' src='/static/images/`+edited_name+`_full.jpg'>
         `);
         return false
       }
