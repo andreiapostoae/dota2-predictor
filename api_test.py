@@ -1,10 +1,13 @@
 from sklearn.externals import joblib
 from preprocessing.dataset import read_dataset
 from training.cross_validation import evaluate
+from visualizing.hero_combinations import plot_synergies, plot_counters
+from visualizing.dataset_stats import winrate_statistics, pick_statistics, mmr_distribution
 from visualizing.learning_curve import plot_learning_curve
 from training.query import query
 import numpy as np
 import time
+
 
 def pretrain():
     # with open('pretrained/results.csv', 'w+') as results_file:
@@ -46,11 +49,15 @@ def main():
     # end_time = time.time()
     #
     # print (end_time - start_time) * 1000, 'ms'
-    features, _ = read_dataset('706e_train_dataset.csv', low_mmr=3000, high_mmr=3500)
-    plot_learning_curve(features[0], features[1], subsets=20, cv=3, mmr=3250, tool='plotly')
+    # features, _ = read_dataset('706e_train_dataset.csv', low_mmr=3000, high_mmr=3500)
+    # plot_learning_curve(features[0], features[1], subsets=20, cv=3, mmr=3250, tool='plotly')
+    #
+    #features, _ = read_dataset('706e_train_dataset.csv', low_mmr=2000, high_mmr=2500)
+    # plot_learning_curve(features[0], features[1], subsets=20, cv=3, mmr=4500, tool='plotly')
 
-    features, _ = read_dataset('706e_train_dataset.csv', low_mmr=4250, high_mmr=4800)
-    plot_learning_curve(features[0], features[1], subsets=20, cv=3, mmr=4500, tool='plotly')
+    #pick_statistics(features, '2200 - 2500')
+
+    mmr_distribution('706e_train_dataset.csv')
 
 
 if __name__ == '__main__':
