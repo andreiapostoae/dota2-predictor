@@ -159,7 +159,8 @@ def compute_advantages(dataset_df):
 
     synergy_matrix, counter_matrix = _calculate_advantages(synergy, counter, heroes_released)
 
-    np.savetxt('pretrained/synergies_all.csv', synergy_matrix)
-    np.savetxt('pretrained/counters_all.csv', counter_matrix)
+    # uncomment only for overwriting precomputed advantages - NOT RECOMMENDED
+    # np.savetxt('pretrained/synergies_all.csv', synergy_matrix)
+    # np.savetxt('pretrained/counters_all.csv', counter_matrix)
 
     return [synergy_matrix, counter_matrix]

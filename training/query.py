@@ -105,9 +105,6 @@ def _query_missing(model,
 
     filtered_list = [x for x in results_list if x[1][1] < max_similarity_allowed]
 
-    for element in filtered_list:
-        print element
-
     return filtered_list
 
 

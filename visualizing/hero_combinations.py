@@ -1,3 +1,4 @@
+""" Module responsible with plotting of hero synergies and counters """
 import numpy as np
 
 import plotly.graph_objs as go

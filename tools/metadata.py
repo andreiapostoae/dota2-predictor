@@ -43,6 +43,7 @@ def get_patch(patch_name):
 
     for entry in metadata_json['patches']:
         if entry['patch_name'] == patch_name:
+            logger.info('Found patch %s', patch_name)
             return entry
 
     logger.error('Could not find patch %s', patch_name)

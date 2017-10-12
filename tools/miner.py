@@ -89,7 +89,7 @@ def mine_data(file_name=None,
 
         results_dataframe = results_dataframe.append(current_dataframe, ignore_index=True)
 
-        if len(results_dataframe) > current_chunk * save_every:
+        if len(results_dataframe) >= current_chunk * save_every:
             current_chunk += 1
 
             if file_name:
@@ -97,11 +97,11 @@ def mine_data(file_name=None,
                 logger.info("Saving to csv. Total of games mined: %d", len(results_dataframe))
 
                 if stop_at:
-                    if len(results_dataframe) > stop_at:
+                    if len(results_dataframe) >= stop_at:
                         return results_dataframe
 
         if stop_at:
-            if len(results_dataframe) > stop_at:
+            if len(results_dataframe) >= stop_at:
                 break
 
         time.sleep(REQUEST_TIMEOUT)
