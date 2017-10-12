@@ -1,6 +1,7 @@
 from sklearn.externals import joblib
 from preprocessing.dataset import read_dataset
 from training.cross_validation import evaluate
+from visualizing.hero_map import plot_hero_map
 from visualizing.hero_combinations import plot_synergies, plot_counters
 from visualizing.dataset_stats import winrate_statistics, pick_statistics, mmr_distribution
 from visualizing.learning_curve import plot_learning_curve
@@ -52,12 +53,13 @@ def main():
     # features, _ = read_dataset('706e_train_dataset.csv', low_mmr=3000, high_mmr=3500)
     # plot_learning_curve(features[0], features[1], subsets=20, cv=3, mmr=3250, tool='plotly')
     #
-    #features, _ = read_dataset('706e_train_dataset.csv', low_mmr=2000, high_mmr=2500)
+    # features, _ = read_dataset('706e_train_dataset.csv', low_mmr=2000, high_mmr=2500)
     # plot_learning_curve(features[0], features[1], subsets=20, cv=3, mmr=4500, tool='plotly')
 
-    #pick_statistics(features, '2200 - 2500')
+    # pick_statistics(features, '2200 - 2500')
 
-    mmr_distribution('706e_train_dataset.csv')
+    # mmr_distribution('706e_train_dataset.csv')
+    plot_hero_map('706e_train_dataset.csv', low_mmr=4000)
 
 
 if __name__ == '__main__':

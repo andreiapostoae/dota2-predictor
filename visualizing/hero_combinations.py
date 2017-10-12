@@ -1,8 +1,9 @@
 import numpy as np
-from tools.metadata import get_hero_dict
 
 import plotly.graph_objs as go
 import plotly.plotly as py
+
+from tools.metadata import get_hero_dict
 
 
 def plot_synergies():
