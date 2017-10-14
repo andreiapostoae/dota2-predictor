@@ -148,7 +148,27 @@ def _query_full(model,
         return "Dire has %.3f%% chance" % (100 - probability)
 
 
-def query(mmr, radiant_heroes, dire_heroes, synergies, counters, similarities):
+def query(mmr, 
+          radiant_heroes, 
+          dire_heroes, 
+          synergies=None, 
+          counters=None, 
+          similarities=None):
+    if similarities is None:
+        sims = np.loadtxt('pretrained/similarities_all.csv')
+    else:
+        sims = np.loadtxt(similarities)
+
+    if counters is None:        
+        cnts = np.loadtxt('pretrained/counters_all.csv')
+    else:
+        cnts = np.loadtxt(counters)
+
+    if synergies is None:
+        syns = np.loadtxt('pretrained/synergies_all.csv')
+    else:
+        syns = np.loadtxt(synergies)
+
     if mmr < 0 or mmr > 10000:
         logger.error("MMR should be a number between 0 and 10000")
         return
@@ -188,15 +208,15 @@ def query(mmr, radiant_heroes, dire_heroes, synergies, counters, similarities):
                            scaler,
                            radiant_heroes,
                            dire_heroes,
-                           synergies,
-                           counters,
+                           syns,
+                           cnts,
                            heroes_released)
 
     return _query_missing(model,
                           scaler,
                           radiant_heroes,
                           dire_heroes,
-                          synergies,
-                          counters,
-                          similarities,
+                          syns,
+                          cnts,
+                          sims,
                           heroes_released)

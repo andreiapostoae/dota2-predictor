@@ -62,8 +62,8 @@ def load_dataset_example():
 
 
 def training_example():
-    dataset_train, _ = read_dataset('706e_train_dataset.csv', low_mmr=4000)
-    dataset_test, _ = read_dataset('706e_test_dataset.csv', low_mmr=4000)
+    dataset_train, _ = read_dataset('706e_train_dataset.csv', low_mmr=4500)
+    dataset_test, _ = read_dataset('706e_test_dataset.csv', low_mmr=4500)
 
     # cv is the number of folds to be used when cross validating (default is 5)
     # save_model is the path where the model should be saved (default None)
@@ -74,19 +74,12 @@ def query_example():
     # having the models pretrained on specific MMR ranges (see pretrained folder), query the result
     # of a game by finding the closest model
 
-    synergies = np.loadtxt('pretrained/synergies_all.csv')
-    counters = np.loadtxt('pretrained/counters_all.csv')
-    similarities = np.loadtxt('pretrained/similarities_all.csv')
-
     # query for the result given the 5v5 configuration in a game around 3000 average MMR
     # radiant team: Huskar, Clinkz, Lifestealer, Luna, Lich
     # dire team: Venomancer, Faceless Void, Leshrac, Ancient Apparition, Broodmother
     full_result = query(3000,
                         [59, 56, 54, 48, 31],
-                        [40, 41, 52, 68, 61],
-                        synergies,
-                        counters,
-                        similarities)
+                        [40, 41, 52, 68, 61])
     logger.info("The result of the full query is: %s", full_result)
 
     # query for the result given the 4v5 or 5v4 configuration in a game around 3000 average MMR
@@ -96,10 +89,7 @@ def query_example():
     # the result is a list of (hero, (win_chance, overall_team_similarity)) sorted by win_chance
     partial_result = query(3000,
                            [59, 56, 54, 48, 31],
-                           [40, 41, 52, 68],
-                           synergies,
-                           counters,
-                           similarities)
+                           [40, 41, 52, 68])
     logger.info("The result of the partial query is: \n%s", partial_result)
 
 
