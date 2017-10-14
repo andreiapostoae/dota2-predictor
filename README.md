@@ -28,7 +28,7 @@ pip install -r requirements.txt
     ├── tools                       # Auxiliary tools e.g. metadata parser and miner
     ├── training                    # Model training and evaluation
     ├── visualizing                 # Plotting tools
-    ├── 706e.zip					# Mined dataset example
+    ├── 706e.zip                    # Mined dataset example
     ├── api_examples.py             # Examples of API usage
     └── metadata.json               # Heroes and patches database
 
@@ -76,9 +76,9 @@ For the entire dataset, these advantages are already precomputed, but they can b
 ```python
 from preprocessing.dataset import read_dataset
 dataset, advantages_computer = read_dataset('706e_train_dataset.csv',
-											low_mmr=2000,
-											high_mmr=2500,
-											advantages=True)
+					    low_mmr=2000,
+					    high_mmr=2500,
+					    advantages=True)
 ```
 
 This example recomputes advantages and uses them automatically as features in the dataset, while filtering games between 2000 and 2500 MMR.
@@ -115,7 +115,7 @@ There are two type of queries you can do:
 from training.query import query
 
 full_result = query(3000,
-					[59, 56, 54, 48, 31],
+		    [59, 56, 54, 48, 31],
                     [40, 41, 52, 68, 61])
 
 partial_result = query(3000,
@@ -156,20 +156,19 @@ Good luck in your matches and game on!
 
 ## FAQ <a name="faq"></a>
   1. Only 60% accuracy? That is not much better than predicting that radiant always wins.
-    * Yes, after a lot of feature engineering and algorithm searching, this is the best I could come up with. Along my experiments, I tried using a variety of classification algorithms and even Neural Networks. Even with a lot of tuning, the NNs acted at best as good as the Logistic Regression, so yeah...
-    There is also the human factor that strongly influences the outcome of a game, so there is no way of predicting each game with close-to-perfect accuracy.
+        * Yes, after a lot of feature engineering and algorithm searching, this is the best I could come up with. Along my experiments, I tried using a variety of classification algorithms and even Neural Networks. Even with a lot of tuning, the NNs acted at best as good as the Logistic Regression, so yeah... There is also the human factor that strongly influences the outcome of a game, so there is no way of predicting each game with close-to-perfect accuracy.
 
   2. How did you generate similarities and plot the hero map?
-  	* I completely ignored the result of the games and tried to understand better what a team composition is. I then applied word2vec to the data, mapping each hero to a word and each team of 5 heroes to a sentence. Amazingly, the algorithm was able to find structure on those team compositions and successfully modelled the similarities. I then applied TSNE to reduce the dimensions, k-means to cluster the new data and voilà.
+        * I completely ignored the result of the games and tried to understand better what a team composition is. I then applied word2vec to the data, mapping each hero to a word and each team of 5 heroes to a sentence. Amazingly, the algorithm was able to find structure on those team compositions and successfully modelled the similarities. I then applied TSNE to reduce the dimensions, k-means to cluster the new data and voilà.
 
   3. Why don't you use only 6k+ games to train your model then get rich by betting on pro games?
-  	* Sadly, it does not work like that. The pro scene is totally different than pubs because in pubs there is some MMR balance, while in pro games the dataset would be filled with noise. Also, there are very few games played at high MMRs.
+        * Sadly, it does not work like that. The pro scene is totally different than pubs because in pubs there is some MMR balance, while in pro games the dataset would be filled with noise. Also, there are very few games played at high MMRs.
 
   4. Why did you not use other statistics, such as XPM, GPM or itemization?
-    * This tool's usage is to suggest you the best possible pick before the game starts. Other statistics are dynamic throughout the game, so they do not help the prediction.
+        * This tool's usage is to suggest you the best possible pick before the game starts. Other statistics are dynamic throughout the game, so they do not help the prediction.
 
   5. How many games do I need to achieve the best accuracy possible?
-    * Experimentally, I'd say at least 150k. If you analyze the learning rates, you can see the plateau after 200k.
+        * Experimentally, I'd say at least 150k. If you analyze the learning rates, you can see the plateau after 200k.
 
   6. Can I contribute to the project?
-    * Yes and I would be glad! I try to be as active as possible, so feel free to post issues, pull requests, or even contact me personally to discuss. Periodically, we ([Michael](https://github.com/michael-pacheco) and me) make updates to the [website](http://www.dotadamus.com) with changes from this repo.
+        * Yes and I would be glad! I try to be as active as possible, so feel free to post issues, pull requests, or even contact me personally to discuss. Periodically, we ([Michael](https://github.com/michael-pacheco) and me) make updates to the [website](http://www.dotadamus.com) with changes from this repo.
