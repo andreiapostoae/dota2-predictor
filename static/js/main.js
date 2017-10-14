@@ -489,9 +489,11 @@ $(document).on("mouseleave", "button", function(e){
   $(this).tooltip();
 });
 
+
 /**
  * Make sure radiant/dire text at top matches each other's widht/height
  */
+ /*
  function setHeight(elem1, elem2) {
   var height = elem2.height()
   elem1.css('height', height);
@@ -509,3 +511,4 @@ $(window).on('resize', function() {
 });
 
 });
+*/
