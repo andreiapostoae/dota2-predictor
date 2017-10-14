@@ -391,7 +391,7 @@ $(document).on("blur", "#hero-search", function(e){
 all_heroes = all_heroes.sort();
 var my_autoComplete = new autoComplete({
     selector: 'input[name="hero-search"]',
-    minChars: 1,
+    minChars: 0,
     source: function(term, suggest){
       term = term.toLowerCase();
       var choices = all_heroes;
@@ -493,7 +493,6 @@ $(document).on("mouseleave", "button", function(e){
 /**
  * Make sure radiant/dire text at top matches each other's widht/height
  */
- /*
  function setHeight(elem1, elem2) {
   var height = elem2.height()
   elem1.css('height', height);
@@ -501,14 +500,19 @@ $(document).on("mouseleave", "button", function(e){
 
 $(document).ready(function() {
 
-//setHeight($('#dire-text-h1'), $('#rad-text-h1'));
+  if($('#rad-text-h1').height() > 0){
+    setHeight($('#dire-text-h1'), $('#rad-text-h1'));
+  }
+
 
 // When the window is resized the height might
 // change depending on content. So to be safe
 // we rerun the function
-$(window).on('resize', function() {
-    setHeight($('#dire-text-h1'), $('#rad-text-h1'));
-});
+  $(window).on('resize', function() {
+      setHeight($('#dire-text-h1'), $('#rad-text-h1'));
+      if($('#dire-text-h1').height() <= 0){
+        setHeight($('#dire-text-h1'), $('#rad-text-h1'));
+      }
+  });
 
 });
-*/

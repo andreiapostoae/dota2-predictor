@@ -17,32 +17,43 @@
 	</head>
 
 	<body>
-	<nav class="navbar navbar-fixed-top navbar-color-on-scroll" role="navigation">
-		<div class="col-sm-3">
-	    <div class="input-group text-center">
-				<div class="form-group is-empty has-info">
-	        <input name="hero-search" id="hero-search" type="text" class="form-control" placeholder="Search for a hero">
-	        <span class="material-input"></span>
-	      </div>
-	      <span class="input-group-addon">
-					<i onclick="search_clear()" class="fa fa-2 fa-times-circle" aria-hidden="true"></i>
-				</span>
-	    </div>
-		</div>
+		<nav class="navbar navbar-fixed-top navbar-color-on-scroll" role="navigation">
+		  <div class="container">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header col-sm-3">
+		      <button id="menu-toggle" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation-index">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar bar1"></span>
+		        <span class="icon-bar bar2"></span>
+		        <span class="icon-bar bar3"></span>
+		      </button>
 
-    <div class="col-sm-3 text-center">
-			<form class="form-group has-info">
-      	<input id="mmr" placeholder="Average MMR" type="text" class="form-control"></input>
-			</form>
-    </div>
-		<div style="padding-top:20px;"  class="col-sm-3 text-center">
-      <button id="predict_button"  rel="tooltip" title="For predicting the winner, select all the heroes in the game." data-placement="bottom" class="disabled btn-default btn-round btn-md btn submit-btn">Predict winner</button>
-		</div>
-    <div style="padding-top:20px;" class="col-sm-3 text-center">
-      <button id="suggest_button" rel="tooltip" title="For getting last pick suggestions, select the other 9 heroes" data-placement="bottom" class="disabled btn-default btn-round btn-md btn submit-btn">Suggest hero</button>
-    </div>
+					<div class="input-group text-center">
+						<div class="form-group is-empty has-info">
+							<input name="hero-search" id="hero-search" type="text" class="form-control" placeholder="Search for a hero">
+							<span class="material-input"></span>
+						</div>
+						<span class="input-group-addon">
+							<i onclick="search_clear()" class="fa fa-2 fa-times-circle" aria-hidden="true"></i>
+						</span>
+					</div>
+		    </div>
 
-	</nav>
+		    <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="#navigation-index">
+				  <div class="col-sm-3 text-center">
+				    <form class="form-group has-info">
+				      <input id="mmr" rel="tooltip" data-placement="bottom" title="Enter the average MMR of the game" placeholder="Average MMR" type="text" class="form-control"></input>
+				    </form>
+				  </div>
+				  <div style="padding-top:20px;"  class="col-sm-3 text-center">
+				    <button id="predict_button"  rel="tooltip" title="For predicting the winner, select all the heroes in the game." data-placement="bottom" class="disabled btn-default btn-round btn-md btn submit-btn">Predict winner</button>
+				  </div>
+				  <div style="padding-top:20px;" class="col-sm-3 text-center">
+				    <button id="suggest_button" rel="tooltip" title="For getting last pick suggestions, select the other 9 heroes." data-placement="bottom" class="disabled btn-default btn-round btn-md btn submit-btn">Suggest hero</button>
+				  </div>
+		  </div><!-- /.container-fluid -->
+		</nav>
 
 	<br><br><br><br>
 	<div class="row" id="selected-heroes">
