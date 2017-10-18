@@ -1,0 +1,202 @@
+/*
+Old style for drop down menus
+select.dropdown{
+  -webkit-appearance: button;
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  -webkit-padding-end: 20px;
+  -webkit-padding-start: 2px;
+  -webkit-user-select: none;
+  background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+  background-position: 97% center;
+  background-repeat: no-repeat;
+  border: 1px solid #AAA;
+  color: #555;
+  font-size: inherit;
+  margin: auto;
+  overflow: hidden;
+  padding: 5px 10px;
+  float:left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 300px;
+  position: relative;
+  left: 25%;
+  top: 50%;
+}
+*/
+@import url('https://rsms.me/interface/interface.css');
+html, body {
+    max-width: 100%;
+
+    overflow-x: hidden;
+
+}
+body{
+  padding: 5px 5px 0 5px;
+}
+h1{
+  text-align: center;
+}
+.col-sm-3, .col-sm-4, .col-sm-6{
+  text-align: center;
+}
+img{
+  max-width: 100%;
+  max-height: 100%;
+
+}
+
+div.col-sm-2.radiant-hero.hero div.col-sm-2.dire-hero.hero div.col-sm-2.hero-selector{
+  width: 62.5px;
+  height: 35.5px;
+  max-width: 62.5px;
+  max-height: 35.5px;
+
+}
+
+.hero-selector{
+  position: relative;
+  padding: 1px 1px 1px 1px;
+  cursor: pointer;
+}
+.hero-selector-2{
+  padding: 1px 1px 1px 1px;
+}
+.hero-selector:after {
+    content:'\A';
+    position:absolute;
+    width:99%; height:99%;
+    top:0; left:0;
+    background:rgba(255,0,0,1);
+    opacity:0;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    background-image: linear-gradient(29deg, green 44%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+    -webkit-backface-visibility: hidden;
+    outline: 1px solid transparent;
+}
+.hero-selector:hover:after {
+    opacity:0.5;
+    pointer-events: none;
+}
+.hero-picked{
+  opacity: 0.4;
+}
+.hero{
+  cursor: pointer;
+}
+p.rad-txt p.dire-txt{
+  margin: 0 auto;
+}
+
+.rad-txt{
+    position:absolute;
+    left:4%;
+    /*top:50%;*/
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    opacity: 0;
+    color:white;
+    z-index: 2;
+}
+.dire-txt{
+    position:absolute;
+    left:60%;
+    /*top:0%;*/
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    opacity: 0;
+    color:white;
+    z-index: 2;
+
+}
+h1, h2, h3, h4{
+  font-family: Interface;
+}
+/*
+.well{
+  background-color: #3F3F3F;
+}
+*/
+.btn.btn-default, .btn.btn-default:hover , .btn.btn-default:focus, .btn.btn-default:after{
+  background: black;
+  background-color: black;
+}
+p{
+  font-family: Interface;
+}
+#rad-hero-grid{
+  padding-top:20px;
+  padding-bottom: 40px;
+}
+#dire-hero-grid{
+  padding-top:20px;
+  padding-bottom:20px;
+}
+#modal-body, #text_area{
+  text-align: center;
+  font-family: Interface;
+}
+#radiant-heroes, #dire-heroes, #selected-heroes, .hero-well{
+  /*min-height: 200px;*/
+}
+input.form-group.is-focused input.form-control  div.form-control  input.form-group.form-control .form-control,
+.form-group .form-control{
+  background-image: linear-gradient(#303030, #303030), linear-gradient(#D2D2D2. #D2D2D2);
+}
+.autocomplete-suggestions{
+  max-height: 100px;
+  position: fixed;
+}
+.fa{
+  cursor: pointer;
+}
+.hero-icon{
+  padding-top: 5px;
+}
+.navbar{
+  background-color: #303030;
+  background: #303030;
+}
+/*below: the text is browser specific*/
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: white;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: white;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: white;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: white;
+}
+input{
+  color:white;
+}
+.well{
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#494949+4,191919+10,3d3d3d+50,191919+96,494949+100 */
+  background: rgb(73,73,73); /* Old browsers */
+  background: -moz-linear-gradient(top,  rgba(73,73,73,1) 4%, rgba(25,25,25,1) 10%, rgba(61,61,61,1) 50%, rgba(25,25,25,1) 96%, rgba(73,73,73,1) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top,  rgba(73,73,73,1) 4%,rgba(25,25,25,1) 10%,rgba(61,61,61,1) 50%,rgba(25,25,25,1) 96%,rgba(73,73,73,1) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom,  rgba(73,73,73,1) 4%,rgba(25,25,25,1) 10%,rgba(61,61,61,1) 50%,rgba(25,25,25,1) 96%,rgba(73,73,73,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#494949', endColorstr='#494949',GradientType=0 ); /* IE6-9 */
+}
+#selected-heroes{
+  padding-bottom: 20px;
+}
+.main-raised{
+  margin: 0px;
+}
+
+/*Hope to fix modal moving everything to the left...*/
+body.modal
+{
+    margin-right: 0!important;
+    overflow: hidden;
+}
+.modal-open-noscroll .navbar-fixed-top, .modal-open .navbar-fixed-bottom
+{
+    margin-right: 0!important;
+}
