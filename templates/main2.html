@@ -1,0 +1,129 @@
+<html>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="/static/css/material-kit.css">
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="/static/js/material.min.js"></script>
+	<script src="/static/js/material-kit.js"></script>
+	<script src="/static/js/auto-complete.min.js"></script>
+	<link rel="stylesheet" href="/static/css/auto-complete.css">
+	<script src="https://use.fontawesome.com/8ddf1c3d3f.js"></script>
+	<link rel="stylesheet" href="/static/css/main.css">
+
+
+	<head>
+	<title>Dota 2 Predictor</title>
+	</head>
+
+	<body>
+		<nav class="navbar navbar-fixed-top navbar-color-on-scroll" role="navigation">
+		  <div class="container">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header col-sm-3">
+		      <button id="menu-toggle" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation-index">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar bar1"></span>
+		        <span class="icon-bar bar2"></span>
+		        <span class="icon-bar bar3"></span>
+		      </button>
+
+					<div class="input-group text-center">
+						<div class="form-group is-empty has-info">
+							<input name="hero-search" id="hero-search" type="text" class="form-control" placeholder="Search for a hero">
+							<span class="material-input"></span>
+						</div>
+						<span class="input-group-addon">
+							<i onclick="search_clear()" class="fa fa-2 fa-times-circle" aria-hidden="true"></i>
+						</span>
+					</div>
+		    </div>
+
+		    <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="#navigation-index">
+				  <div class="col-sm-3 text-center">
+				    <form class="form-group has-info">
+				      <input id="mmr" rel="tooltip" data-placement="bottom" title="Enter the average MMR of the game" placeholder="Average MMR" type="text" class="form-control"></input>
+				    </form>
+				  </div>
+				  <div style="padding-top:20px;"  class="col-sm-3 text-center">
+				    <button id="predict_button"  rel="tooltip" title="For predicting the winner, select all the heroes in the game." data-placement="bottom" class="disabled btn-default btn-round btn-md btn submit-btn">Predict winner</button>
+				  </div>
+				  <div style="padding-top:20px;" class="col-sm-3 text-center">
+				    <button id="suggest_button" rel="tooltip" title="For getting last pick suggestions, select the other 9 heroes." data-placement="bottom" class="disabled btn-default btn-round btn-md btn submit-btn">Suggest hero</button>
+				  </div>
+		  </div><!-- /.container-fluid -->
+		</nav>
+
+	<br><br><br><br>
+	<div class="row" id="selected-heroes">
+	  <div class="col-sm-6 col-xs-6" id="radiant-heroes">
+	    <br>
+	    <h1 class="team-text" id="rad-text-h1">
+	      Radiant Team
+	    </h1>
+	  </div>
+
+	  <div class="col-sm-6 col-xs-6" id="dire-heroes">
+	    <br>
+	    <h1 class="team-text" id="dire-text-h1">
+	      Dire Team
+	    </h1>
+	  </div>
+	</div>
+	<br><br><br>
+	<div class="row main main-raised" id="rad-hero-grid">
+	  <div class="col-sm-4 col-xs-4" id="rad-str-heroes">
+	  </div>
+
+	  <div class="col-sm-4 col-xs-4" id="rad-agi-heroes">
+	  </div>
+
+	  <div class="col-sm-4 col-xs-4" id="rad-int-heroes">
+	  </div>
+	</div>
+	<br>
+	<div class="row main main-raised" id="dire-hero-grid">
+	  <div class="col-sm-4 col-xs-4" id="dire-str-heroes">
+	  </div>
+	  <div class="col-sm-4 col-xs-4" id="dire-agi-heroes">
+	  </div>
+	  <div class="col-sm-4 col-xs-4" id="dire-int-heroes">
+	  </div>
+	</div>
+
+	<div class="modal fade" id="data-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button btn-sm btn-danger" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        <h4 class="modal-title" id="modal-label"></h4>
+	      </div>
+	      <div class="modal-body">
+	        <p id="text_area">
+	        </p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-success btn-md" data-dismiss="modal">OK!</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	</body>
+	<footer>
+		<div class="col-md-2 col-md-offset-5 col-sm-2 col-sm-offset-5 col-xs-2 col-xs-offset-5">
+			<a target="_blank" href="https://github.com/andreiapostoae/dota2-predictor" class="btn btn-github" style="text-align: center; background: #333333;">
+	      <i class="fa fa-github"></i>
+	        GitHub Page
+			</a>
+		</div>
+		<img id='temp' src='/static/images/puck_full.jpg'>
+	</footer>
+</html>
+<script>
+
+  radiant_heroes = {{radiant_heroes|safe}};
+  dire_heroes = {{dire_heroes|safe}};
+
+</script>
+<script src="/static/js/main.js"></script>
