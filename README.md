@@ -1,5 +1,5 @@
 # Important update from the author 
-As I need to focus on my Bachelor thesis, I do not have the time to update the tool at the moment. However, I will do my best to keep the tool alive and update the available datasets in order to match the current patches.
+I will try to update this repo over the winter break as I want the game meta to stabilize a little. Stay tuned!
 
 
 # dota2-predictor
