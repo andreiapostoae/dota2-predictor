@@ -29,9 +29,7 @@ def evaluate(train_data, test_data, cv=5, save_model=None):
     x_test, y_test = test_data
 
     scaler = StandardScaler()
-    scaler.fit(x_train)
-
-    x_train = scaler.transform(x_train)
+    x_train = scaler.fit_transform(x_train)
     x_test = scaler.transform(x_test)
 
     cross_val_mean = -1
