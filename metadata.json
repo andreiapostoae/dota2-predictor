@@ -677,14 +677,26 @@
             "faction": "Radiant", 
             "name": "Monkey King", 
             "id": 114
+        },
+        {
+            "primary_attribute": "Intelligence",
+            "faction": "Dire",
+            "name": "Dark Willow",
+            "id": 119
+        },
+        {
+            "primary_attribute": "Agility",
+            "faction": "Radiant",
+            "name": "Pangolier",
+            "id": 120
         }
     ], 
     "patches": [
         {
-            "heroes_released": 114, 
-            "patch_name": "7.06e", 
-            "first_match_id": 3293000000, 
-            "last_match_id": 3306144409
+            "heroes_released": 116,
+            "patch_name": "7.07d",
+            "first_match_id": 3629847571,
+            "last_match_id": 3694556228
         }
     ]
 }
