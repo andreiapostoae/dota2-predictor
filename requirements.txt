@@ -8,7 +8,7 @@ decorator==4.1.2
 enum34==1.1.6
 funcsigs==1.0.2
 functools32==3.2.3.post2
-html5lib==0.9999999
+html5lib==0.99999999
 idna==2.6
 ipython-genutils==0.2.0
 jsonschema==2.6.0
