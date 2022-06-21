@@ -18,7 +18,7 @@ Markdown==2.6.9
 matplotlib==2.1.0
 mock==2.0.0
 nbformat==4.4.0
-numpy==1.13.3
+numpy==1.22.0
 pandas==0.20.3
 pbr==3.1.1
 plotly==2.1.0
