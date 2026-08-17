@@ -15,8 +15,8 @@ def _update_dicts(game, synergy, counter):
     """
     radiant_win, radiant_heroes, dire_heroes = game[1], game[2], game[3]
 
-    radiant_heroes = map(int, radiant_heroes.split(','))
-    dire_heroes = map(int, dire_heroes.split(','))
+    radiant_heroes = list(map(int, radiant_heroes.split(',')))
+    dire_heroes = list(map(int, dire_heroes.split(',')))
 
     for i in range(5):
         for j in range(5):

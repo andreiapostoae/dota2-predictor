@@ -1,0 +1,72 @@
+{
+  "dataset": {
+    "total_games": 1928183,
+    "train": 1638955,
+    "test": 289228,
+    "split": "temporal on match_id, 85/15"
+  },
+  "results": [
+    {
+      "model": "original, random split (reproduces author ~0.63)",
+      "auc": 0.647,
+      "brier": 0.2326
+    },
+    {
+      "model": "one-hot only, no advantage cols",
+      "auc": 0.6269
+    },
+    {
+      "model": "temporal split, leaky precomputed advantages",
+      "auc": 0.6632,
+      "brier": 0.2288,
+      "note": "inflated"
+    },
+    {
+      "model": "temporal split, train-only advantages (honest baseline)",
+      "auc": 0.6504,
+      "brier": 0.2319
+    },
+    {
+      "model": "LightGBM, same features",
+      "auc": 0.6427,
+      "brier": 0.2335
+    },
+    {
+      "model": "learned embeddings k=16",
+      "auc": 0.6484,
+      "brier": 0.2323
+    },
+    {
+      "model": "average ensemble (base+emb)",
+      "auc": 0.6528,
+      "brier": 0.2313
+    },
+    {
+      "model": "stacked (base+emb)",
+      "auc": 0.6536,
+      "brier": 0.2311
+    },
+    {
+      "model": "prefix model, full draft",
+      "auc": 0.6455
+    }
+  ],
+  "prefix_auc_by_completeness": {
+    "2": 0.5572,
+    "4": 0.583,
+    "6": 0.6049,
+    "8": 0.625,
+    "10": 0.6455
+  },
+  "calibration_mean_abs_error": {
+    "baseline": 0.0086,
+    "embeddings": 0.0058,
+    "lightgbm": 0.0037
+  },
+  "negative_results": [
+    "Empirical Bayes shrinkage: no effect (k=10..1000 all ~0.650). Median pair support 3227 games; only 1.8% of pairs under 100.",
+    "LightGBM underperforms linear model on sparse binary hero features.",
+    "Embeddings alone lose to one-hot baseline; only help in ensemble (logit corr 0.907).",
+    "Synergy-embedding nearest neighbours are not semantically meaningful."
+  ]
+}
