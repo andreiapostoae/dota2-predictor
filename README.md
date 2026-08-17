@@ -1,178 +1,162 @@
-# Important update from the author 
-I will try to update this repo over the winter break as I want the game meta to stabilize a little. Stay tuned!
+# dota2-predictor — Python 3 port and modelling extensions
 
+Fork of [andreiapostoae/dota2-predictor](https://github.com/andreiapostoae/dota2-predictor).
 
-# dota2-predictor
+The upstream project predicts Dota 2 match outcomes from the draft alone: logistic
+regression over one-hot hero indicators plus three hand-counted "advantage" scalars,
+reaching roughly 0.63 ROC AUC. It targets Python 2.7 and no longer runs.
 
-1. [Overview](#overview)		
-2. [Requirements](#requirements)		
-3. [Project structure](#structure)	
-4. [Basic usage](#usage)		
-    * [Mining](#mining)		
-    * [Loading a dataset](#dataset)		
-    * [Training and evaluating a model](#training)		
-    * [Querying a model](#querying)		
-    * [Visualizing data](#visualizing)		
-5. [Author's note](#author)		
-6. [FAQ](#faq)
+This fork ports it to Python 3, fixes two methodology problems that were inflating
+the reported numbers, and extends it from a full-draft scorer into something that
+can score and recommend at **any point in the draft**.
 
-## Overview  <a name="overview"></a>
-dota2-predictor is a tool that uses Machine Learning to predict the outcome of a Dota 2 game and suggest the best last pick. Moreover, it helps the users visualize various statistics of the datasets (e.g. hero maps, synergies, counters). The project achieves roughly 0.65 ROC AUC score using Logistic Regression and Neural Networks. The code is used mainly for creating models used by [dotadamus.com](http://www.dotadamus.com).
+Full write-up with all results, including the ones that did not work:
+**[FINDINGS.md](FINDINGS.md)**
 
-## Requirements <a name="requirements"></a>
-The project requires a handful of python2.7 packages. Install them using:
+---
+
+## Headline results
+
+Dataset: patch 7.06e, 1,928,183 public matches. Chronological 85/15 split on `match_id`.
+
+| model | AUC | Brier |
+|---|---|---|
+| upstream setup, random split (reproduces author) | 0.6470 | 0.2326 |
+| *leaky* precomputed advantages | *0.6632* | *0.2288* |
+| **honest baseline: one-hot + train-only advantages** | **0.6504** | 0.2319 |
+| LightGBM, same features | 0.6427 | 0.2335 |
+| learned hero embeddings, k=16 | 0.6484 | 0.2323 |
+| stacked (baseline + embeddings) | **0.6536** | **0.2311** |
+
+Signal accumulates as the draft fills in — a curve the upstream code cannot produce:
+
+| heroes drafted | 2 | 4 | 6 | 8 | 10 |
+|---|---|---|---|---|---|
+| AUC | 0.5572 | 0.5830 | 0.6049 | 0.6250 | 0.6455 |
+
+---
+
+## Quick start
+
 ```bash
 pip install -r requirements.txt
+
+python scripts/run_baseline.py --lightgbm     # baseline + calibration  (~1 min)
+python scripts/train_embeddings.py            # embedding model         (~3 min)
+python scripts/train_prefix.py                # prefix model + curve    (~3 min)
+
+python scripts/demo_draft.py \
+    --radiant Pudge,Juggernaut --dire Invoker,Lion --lookahead
 ```
 
-## Project structure  <a name="structure"></a>
-    .
-    ├── preprocessing               # Dataset preprocessing
-    ├── pretrained                  # Pretrained models for each MMR category and precomputed synergies
-    ├── tools                       # Auxiliary tools e.g. metadata parser and miner
-    ├── training                    # Model training and evaluation
-    ├── visualizing                 # Plotting tools
-    ├── 706e.zip                    # Mined dataset example
-    ├── api_examples.py             # Examples of API usage
-    └── metadata.json               # Heroes and patches database
+The dataset ships as `706e.zip` and is extracted automatically on first run.
+Intermediates are cached in `artifacts/cache/`, so only the first script pays the
+parsing cost.
 
+---
 
-## Basic usage  <a name="usage"></a>
-You can find all the functions this tool has in [api_examples.py](https://github.com/andreiapostoae/dota2-predictor/blob/master/api_examples.py).
+## What changed
 
-### Mining data  <a name="mining"></a>
-Mining the first 1000 games between two valid match IDs and saving them to a file is as simple as:
+**Port.** Python 2.7 → 3.12 across `advantages.py`, `dataset.py`,
+`cross_validation.py` (`metadata.py` and `augmenter.py` needed nothing): `map()`
+iterator indexing, implicit relative imports, `sklearn.externals.joblib`. Also fixed
+a genuine bug — `dataset.py` computed the advantage columns inside the 5-iteration
+hero loop, recomputing identical values five times per game.
 
-```python
-from tools.miner import mine_data
+**Performance.** `preprocessing/fast_features.py` replaces the dense row-by-row
+builder with a vectorised sparse one: **3,314 MB → 194 MB**, minutes → 14 s. The
+original OOM-killed on the full dataset.
 
-mine_data(file_name='mine_example.csv',
-          first_match_id=3492535023,
-          last_match_id=3498023575,
-          stop_at=1000)
+**Two methodology fixes.** The shipped split is random, and 100% of its test
+`match_id` values fall inside the training range; `match_id` increases with time, so
+the split should be chronological. Separately, `pretrained/synergies_all.csv` was
+computed over the *whole* dataset including test games. Together these were worth
+about 0.013 AUC of phantom performance.
+
+**Learned embeddings** (`training/embedding_model.py`). Each hero gets three learned
+vectors instead of a one-hot column, with synergy and counter emerging from dot
+products. Uses the factorization-machine identity so a 5-hero team costs O(5k) rather
+than O(25k). The counter term is antisymmetric by construction, so
+`logit(R,D) = -logit(D,R) + 2b` holds to machine precision — side symmetry is
+structural rather than learned, which makes mirror data augmentation unnecessary.
+Hand-written NumPy with explicit gradients and Adam.
+
+**Partial drafts** (`training/prefix_model.py`). The same model with masking, trained
+on randomly truncated drafts so it can score a board that is half empty.
+
+**Sequential recommendation** (`training/sequential_query.py`). Upstream `query.py`
+answers one question — given nine heroes, what is the tenth? This ranks candidates at
+any draft stage, with optional one-ply opponent-reply lookahead.
+
+Greedy scoring turns out to be systematically optimistic. From
+`Radiant: Pudge, Juggernaut / Dire: Invoker, Lion`, Spectre reads **0.684** greedily
+but **0.586** once the opponent replies, and only 3 of the top 5 survive the change.
+Heroes that are strong but easily punished drop out.
+
+---
+
+## Testing
+
+```bash
+pip install pytest
+pytest                             # 24 fast unit tests, ~2s, no dataset needed
+pytest -m slow                     # 5 integration tests against real data, ~60s
+pytest -m "slow or not slow" -v    # everything
 ```
 
-The result will be a CSV file with the following format:
+The fast suite checks correctness properties that hold regardless of data: the
+vectorised feature builder produces identical output to the upstream loop, the
+O(5k) factorization-machine shortcut equals the explicit O(25k) pair sum, the
+hand-written gradients match finite differences, masked-out heroes have exactly
+zero influence, and `rank_picks` never suggests a drafted or banned hero.
 
-| match_id   | radiant_win | radiant_team       | dire_team      | avg_mmr | num_mmr | game_mode | lobby_type |
-|------------|-------------|--------------------|----------------|---------|---------|-----------|------------|
-| 3315687002 | True        | "105,74,14,41,113" | "7,63,93,4,36" | 3649    | 2       | 22        | 7          |
-| 3380355408 | False       | "97,62,18,50,35"   | "7,22,32,1,36" | 3186    | 7       | 22        | 7          |
-| 3324424409 | False       | "96,74,36,15,94"   | "39,1,2,86,27" | 2648    | 2       | 22        | 0          |
+The slow suite guards the headline number: `test_baseline_reaches_expected_auc`
+fails if the documented 0.6504 drifts by more than 0.004.
 
-  * match_id: the official match ID stored in Valve servers
-  * radiant_win: True if radiant won, False if dire won
-  * radiant_team: string containing 5 hero IDs coresponding to the heroes in the radiant team
-  * dire_team: same, but for dire
-  * avg_mmr: average MMR of people with public MMR in the game
-  * num_mmr: number of people with public MMR in the game
-  * game_mode: 22 - All Pick
-  * lobby_type: 7 - Ranked, 0 - Normal
+The suite was validated by mutation testing — breaking the FM constant, flipping
+the counter term's sign, removing the one-hot side offset, and disabling the
+drafted-hero filter each produce failures, so the tests are not vacuous.
 
+CI runs the fast suite on Python 3.10 and 3.12 (`.github/workflows/tests.yml`).
 
-### Loading a dataset  <a name="dataset"></a>
-When loading a dataset, additional preprocessing through feature engineering is done. We define **advantages** two (number_of_heroes, number_of_heroes) matrices that give a score for synergy and counter between each combination of heroes. 
-  * 0.54 score at position [i, j] for the synergy matrix means hero<sub>i</sub> and hero<sub>j</sub> have a 54% winrate when playing in the same team (the matrix is symmetrical)
-  * 0.33 score at position [i, j] for the counter matrix means hero<sub>i</sub> has a 33% winrate against hero<sub>j</sub> (the matrix is not symmetrical)
+---
 
-For the entire dataset, these advantages are already precomputed, but they can be overwritten through the read_dataset method:
+## Layout
 
-```python
-from preprocessing.dataset import read_dataset
-dataset, advantages_computer = read_dataset('706e_train_dataset.csv',
-					    low_mmr=2000,
-					    high_mmr=2500,
-					    advantages=True)
+```
+preprocessing/
+  advantages.py        upstream pair-winrate counting (ported)
+  augmenter.py         upstream per-game advantage summary
+  dataset.py           upstream feature builder (ported, bug fixed)
+  fast_features.py     NEW  vectorised sparse feature builder
+  improved.py          NEW  shrinkage, temporal split, mirroring
+training/
+  cross_validation.py  upstream train/evaluate (ported)
+  query.py             upstream last-pick query
+  embedding_model.py   NEW  hero embedding model, NumPy + Adam
+  prefix_model.py      NEW  masked variant for partial drafts
+  sequential_query.py  NEW  any-stage recommendation + lookahead
+scripts/               NEW  reproduction entry points
+tests/                 NEW  pytest suite (24 fast + 5 slow)
+artifacts/             trained models and results.json
+docs/UPSTREAM_README.md  the original author's README
+FINDINGS.md            full write-up including negative results
 ```
 
-This example recomputes advantages and uses them automatically as features in the dataset, while filtering games between 2000 and 2500 MMR.
+---
 
+## Honest caveats
 
-### Training and evaluating a model  <a name="training"></a>
-The algorithm used for training is Logistic Regression and the evaluation is done through cross validation. The trained model can be saved to a pickle file for later use.
-The cross validation is done on the train dataset and the final accuracy scores (ROC AUC and raw accuracy) are on the test dataset.
+- The modelling gain is small: **0.6536 vs 0.6504** against the leakage-free baseline.
+  The larger number against the upstream 0.6470 is partly split methodology, not model
+  quality.
+- The prefix model was still improving at 8 epochs — it is undertrained.
+- Four things that were expected to help did not: shrinkage, LightGBM, embeddings on
+  their own, and embedding interpretability. All four are documented with diagnosis in
+  FINDINGS.md rather than quietly dropped.
+- `tools/miner.py` is **not** ported. It needs `urllib2`, `pandas.append` and
+  `json_normalize` replaced, and could not be tested in the environment this work was
+  done in.
 
-```python
-from preprocessing.dataset import read_dataset
-from training.cross_validation import evaluate
-
-dataset_train, _ = read_dataset('706e_train_dataset.csv', low_mmr=4500)
-dataset_test, _ = read_dataset('706e_test_dataset.csv', low_mmr=4500)
-
-evaluate(dataset_train, dataset_test, cv=7, save_model='test.pkl')
-```
-Output:
-```
-INFO:preprocessing.dataset:The train dataset contains 112057 games
-INFO:preprocessing.dataset:The test dataset contains 8390 games
-INFO:training.cross_validation:Cross validation scores over the training set (7 folds): 0.630 +/- 0.004
-INFO:training.cross_validation:Test ROC AUC: 0.628
-INFO:training.cross_validation:Test accuracy score: 0.592
-```
-
-### Querying a model  <a name="querying"></a>
-There are two type of queries you can do:
-  * full query: insert all 10 heroes in a game and predict the winner
-  * partial query: insert 9 heroes in a game and the prediction will be made in order to maximize the 10<sup>th</sup> player's winning chance
-
-```python
-from training.query import query
-
-full_result = query(3000,
-		    [59, 56, 54, 48, 31],
-                    [40, 41, 52, 68, 61])
-
-partial_result = query(3000,
-                       [59, 56, 54, 48, 31],
-                       [40, 41, 52, 68])
-```
-
-For the first query, a simple result is shown (e.g. Radiant has 53.42% chance to win). The second query has a more complex output: tuples of (hero, (win chance, similarity inside team)).
-We define **similarity** a score that represents how close two different are role-wise. We use this metric in order to filter out heroes that do not match a team composition (e.g. you do not want a 5 carry team even if they have very high winrates separately). The similarities can be analyzed in a hero map in the next section.
-
-### Visualizing data  <a name="visualizing"></a>
-For better understanding of the data, plots can be created with ease:
-  * learning curve (matplotlib, plotly)
-  * win rate statistics (plotly)
-  * pick statistics (plotly)
-  * MMR distribution (plotly)
-  * hero synergies (plotly)
-  * hero counters (plotly)
-  * hero map using similarities (plotly)
-
-Here are some examples, but more can be found [here](https://plot.ly/~apostoae.andrei), where they are also interactive:
-
-![learning curve](https://i.imgur.com/lESHAv1.png)
-
-![hero map](https://i.imgur.com/kfpYYlT.png)
-
-## Author's note  <a name="author"></a>
-This is a hobby project started with the goal of achieving as high accuracy as possible given the picks from a game. After great response from the community, I decided to look for a collaborator who would help me implement a web app for this tool (web development is not really my thing), as previously it was hard to use.
-
-I was lucky to find [Michael](https://github.com/michael-pacheco), a talented student who shares the same passion as me for gaming and programming. He was able to create the [website](http://www.dotadamus.com) from scratch using what I previously implemented and set everything up for deployment. 
-
-The website is not indended to make money and all the expenses are on my side, but as long as people visit it and the servers hold enough traffic, I am the happiest person in the world.
-
-This tool is up-to-date with the current patches and does a decent job predicting your best possible last pick given a situation in order to give you that little extra chance that turns the tides in your favor.
-
-Good luck in your matches and game on!
-
-
-## FAQ <a name="faq"></a>
-  1. Only 60% accuracy? That is not much better than predicting that radiant always wins.
-        * Yes, after a lot of feature engineering and algorithm searching, this is the best I could come up with. Along my experiments, I tried using a variety of classification algorithms and even Neural Networks. Even with a lot of tuning, the NNs acted at best as good as the Logistic Regression, so yeah... There is also the human factor that strongly influences the outcome of a game, so there is no way of predicting each game with close-to-perfect accuracy.
-
-  2. How did you generate similarities and plot the hero map?
-        * I completely ignored the result of the games and tried to understand better what a team composition is. I then applied word2vec to the data, mapping each hero to a word and each team of 5 heroes to a sentence. Amazingly, the algorithm was able to find structure on those team compositions and successfully modelled the similarities. I then applied TSNE to reduce the dimensions, k-means to cluster the new data and voilà.
-
-  3. Why don't you use only 6k+ games to train your model then get rich by betting on pro games?
-        * Sadly, it does not work like that. The pro scene is totally different than pubs because in pubs there is some MMR balance, while in pro games the dataset would be filled with noise. Also, there are very few games played at high MMRs.
-
-  4. Why did you not use other statistics, such as XPM, GPM or itemization?
-        * This tool's usage is to suggest you the best possible pick before the game starts. Other statistics are dynamic throughout the game, so they do not help the prediction.
-
-  5. How many games do I need to achieve the best accuracy possible?
-        * Experimentally, I'd say at least 150k. If you analyze the learning rates, you can see the plateau after 200k.
-
-  6. Can I contribute to the project?
-        * Yes and I would be glad! I try to be as active as possible, so feel free to post issues, pull requests, or even contact me personally to discuss. Periodically, we ([Michael](https://github.com/michael-pacheco) and me) make updates to the [website](http://www.dotadamus.com) with changes from this repo.
+## Licence
+Upstream licence retained — see [LICENSE](LICENSE).

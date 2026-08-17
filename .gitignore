@@ -105,3 +105,8 @@ ENV/
 # dev files
 706e_test_dataset.csv
 706e_train_dataset.csv
+# --- fork additions ---
+data_raw/
+artifacts/cache/
+*.npz
+!artifacts/temporal_split.npz
